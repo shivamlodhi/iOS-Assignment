@@ -39,10 +39,7 @@ final class ArticleImageView: UIView {
     }
 
     func setImage(with url: URL?) {
-        imageView.kf.cancelDownloadTask()
-        imageView.image = nil
-        guard let url else { return }
-
+        // Passing nil too, so a reused cell doesn't get an old download
         imageView.kf.indicatorType = .activity
         imageView.kf.setImage(with: url, options: [.transition(.fade(0.25))])
     }
