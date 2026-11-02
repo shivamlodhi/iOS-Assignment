@@ -35,7 +35,12 @@ final class ArticleListCell: UICollectionViewCell {
         calendarImageView.tintColor = AppColors.dateText
 
         var config = UIButton.Configuration.filled()
-        config.attributedTitle = AttributedString("Read More", attributes: AttributeContainer([.font: AppFonts.button]))
+        config.title = "Read More"
+        config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { attributes in
+            var attributes = attributes
+            attributes.font = AppFonts.button
+            return attributes
+        }
         config.image = AppIcons.readMore
         config.imagePlacement = .trailing
         config.imagePadding = 16
