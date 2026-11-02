@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 import XCGLogger
 
 final class ArticleListViewController: UIViewController {
@@ -20,6 +21,7 @@ final class ArticleListViewController: UIViewController {
     private var isGridMode = false
 
     private let refreshControl = UIRefreshControl()
+    private var stateViewController: UIHostingController<StateView>?
     private let searchController = UISearchController(searchResultsController: nil)
     private lazy var layoutButton = UIBarButtonItem(image: AppIcons.grid, style: .plain,
                                                     target: self, action: #selector(layoutButtonTapped))
@@ -142,14 +144,66 @@ final class ArticleListViewController: UIViewController {
             switch result {
             case .fresh(let articles):
                 self.articles = articles
+                self.reloadContent()
             case .cached(let articles, let error):
                 log.warning("Showing cached articles: \(error.message)")
                 self.articles = articles
+                self.reloadContent()
+                let message = error == .noInternet ? "You’re offline. Showing saved articles." : "Couldn’t refresh. Showing saved articles."
+                ToastHelper.showWarning(message, on: self)
             case .failure(let error):
                 log.error("No articles to show: \(error.message)")
+                self.articles = []
+                self.collectionView.reloadData()
+                self.showState(error == .noInternet ? .offline(onRetry: self.retry) : .error(error, onRetry: self.retry))
             }
-            self.collectionView.reloadData()
         }
+    }
+
+    private func reloadContent() {
+        collectionView.reloadData()
+
+        if articles.isEmpty {
+            showState(.empty(onRetry: retry))
+        } else if visibleArticles.isEmpty {
+            showState(.noResults(for: searchText))
+        } else {
+            hideState()
+        }
+    }
+
+    // MARK: - State view
+
+    private func showState(_ stateView: StateView) {
+        if let stateViewController {
+            stateViewController.rootView = stateView
+            return
+        }
+
+        let hostingController = UIHostingController(rootView: stateView)
+        addChild(hostingController)
+        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(hostingController.view)
+        NSLayoutConstraint.activate([
+            hostingController.view.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            hostingController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            hostingController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            hostingController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+        hostingController.didMove(toParent: self)
+        stateViewController = hostingController
+    }
+
+    private func hideState() {
+        stateViewController?.willMove(toParent: nil)
+        stateViewController?.view.removeFromSuperview()
+        stateViewController?.removeFromParent()
+        stateViewController = nil
+    }
+
+    private func retry() {
+        hideState()
+        loadArticles()
     }
 
     // MARK: - Actions
@@ -161,6 +215,8 @@ final class ArticleListViewController: UIViewController {
     @objc private func connectivityChanged() {
         if articleManager.isConnected {
             loadArticles()
+        } else {
+            ToastHelper.showWarning("You’re offline. Showing saved articles.", on: self)
         }
     }
 
@@ -218,7 +274,7 @@ extension ArticleListViewController: UISearchResultsUpdating, UISearchController
 
     func updateSearchResults(for searchController: UISearchController) {
         searchText = searchController.searchBar.text?.trimmingCharacters(in: .whitespaces) ?? ""
-        collectionView.reloadData()
+        reloadContent()
     }
 
     func didPresentSearchController(_ searchController: UISearchController) {

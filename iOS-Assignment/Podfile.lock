@@ -2,6 +2,7 @@ PODS:
   - Alamofire (5.12.2)
   - Cache (6.0.0)
   - Kingfisher (8.14.0)
+  - Loaf (0.7.0)
   - ObjcExceptionBridging (7.1.5):
     - ObjcExceptionBridging/ObjcExceptionBridging (= 7.1.5)
   - ObjcExceptionBridging/ObjcExceptionBridging (7.1.5)
@@ -16,6 +17,7 @@ DEPENDENCIES:
   - Alamofire
   - Cache
   - Kingfisher
+  - Loaf
   - ReachabilitySwift
   - Swinject
   - XCGLogger
@@ -25,6 +27,7 @@ SPEC REPOS:
     - Alamofire
     - Cache
     - Kingfisher
+    - Loaf
     - ObjcExceptionBridging
     - ReachabilitySwift
     - Swinject
@@ -34,11 +37,12 @@ SPEC CHECKSUMS:
   Alamofire: c5f37d8f438dc1d7fd3ff767f2f80fd01ca381d7
   Cache: 4ca7e00363fca5455f26534e5607634c820ffc2d
   Kingfisher: 0bc3e46cbca95dcfb48dedfe8607bdd76ae216d9
+  Loaf: d69937cd00649f3fa260beb8b7aef0a1feb861ef
   ObjcExceptionBridging: d3d37d62981bb7f252ecb31b62d7e23a96bbfb8a
   ReachabilitySwift: 32793e867593cfc1177f5d16491e3a197d2fccda
   Swinject: a827d508c6270da03ec74e558e728917a888fa9b
   XCGLogger: 399c5885210b4e2ad79d9f7a29b105d672ef724f
 
-PODFILE CHECKSUM: e3ac0aaa0599f8882343ab6cdc12e27f1f2fc708
+PODFILE CHECKSUM: 0a6888965e068fdf83f3b80e2748b4f53b0665ed
 
 COCOAPODS: 1.16.2
