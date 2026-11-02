@@ -6,31 +6,46 @@
 //
 
 import UIKit
+import Swinject
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
+    let container = Container()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        registerDependencies()
+        container.resolve(ReachabilityService.self)?.start()
         return true
+    }
+
+    private func registerDependencies() {
+        container.register(APIClient.self) { _ in
+            APIClient()
+        }.inObjectScope(.container)
+
+        container.register(ArticleProviderProtocol.self) { resolver in
+            ArticleProvider(apiClient: resolver.resolve(APIClient.self)!)
+        }
+
+        container.register(ArticleCache.self) { _ in
+            ArticleCache()
+        }.inObjectScope(.container)
+
+        container.register(ReachabilityService.self) { _ in
+            ReachabilityService()
+        }.inObjectScope(.container)
+
+        container.register(ArticleManager.self) { resolver in
+            ArticleManager(provider: resolver.resolve(ArticleProviderProtocol.self)!,
+                           cache: resolver.resolve(ArticleCache.self)!,
+                           reachability: resolver.resolve(ReachabilityService.self)!)
+        }.inObjectScope(.container)
     }
 
     // MARK: UISceneSession Lifecycle
 
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-        // Called when a new scene session is being created.
-        // Use this method to select a configuration to create the new scene with.
         return UISceneConfiguration(name: "Default Configuration", sessionRole: connectingSceneSession.role)
     }
-
-    func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
-        // Called when the user discards a scene session.
-        // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
-        // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
-    }
-
-
 }
-
