@@ -35,6 +35,8 @@ final class ArticleDetailViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        // Dark header, so the status bar and bar content stay light
+        navigationController?.navigationBar.overrideUserInterfaceStyle = .dark
         // iPad shows the detail as the root of its column, so there is nothing to go back to
         let canGoBack = navigationController?.viewControllers.first != self
         navigationItem.leftBarButtonItem = canGoBack ? makeBackButton() : nil

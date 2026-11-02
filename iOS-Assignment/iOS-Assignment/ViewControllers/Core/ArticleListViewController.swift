@@ -47,17 +47,23 @@ final class ArticleListViewController: UIViewController {
                                                name: .connectivityChanged, object: nil)
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // iOS 26 turns the bar dark when the dark cards scroll under it, keep it white like the design
+        navigationController?.navigationBar.overrideUserInterfaceStyle = .light
+    }
+
     private func setupNavigationBar() {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = .systemBackground
+        appearance.backgroundColor = .white
         appearance.shadowColor = .clear
         navigationItem.standardAppearance = appearance
         navigationItem.scrollEdgeAppearance = appearance
 
         // Soft shadow under the header like in the design
         let navigationBar = navigationController?.navigationBar
-        navigationBar?.tintColor = .label
+        navigationBar?.tintColor = .black
         navigationBar?.layer.shadowColor = UIColor.black.cgColor
         navigationBar?.layer.shadowOpacity = 0.08
         navigationBar?.layer.shadowOffset = CGSize(width: 0, height: 6)
@@ -67,6 +73,7 @@ final class ArticleListViewController: UIViewController {
         let titleLabel = UILabel()
         titleLabel.text = "Articles"
         titleLabel.font = AppFonts.screenTitle
+        titleLabel.textColor = .black
         titleLabel.adjustsFontForContentSizeCategory = true
         let titleItem = UIBarButtonItem(customView: titleLabel)
         if #available(iOS 26.0, *) {
