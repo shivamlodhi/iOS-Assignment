@@ -24,8 +24,7 @@ final class ArticleListViewController: UIViewController {
     private let refreshControl = UIRefreshControl()
     private var stateViewController: UIHostingController<StateView>?
     private let searchController = UISearchController(searchResultsController: nil)
-    private lazy var layoutButton = UIBarButtonItem(image: AppIcons.grid, style: .plain,
-                                                    target: self, action: #selector(layoutButtonTapped))
+    private let layoutButton = UIButton(type: .system)
 
     // Articles after applying the search text
     private var visibleArticles: [Article] {
@@ -82,9 +81,24 @@ final class ArticleListViewController: UIViewController {
         navigationItem.leftBarButtonItem = titleItem
         navigationItem.backButtonDisplayMode = .minimal
 
-        let searchButton = UIBarButtonItem(image: AppIcons.search, style: .plain,
-                                           target: self, action: #selector(searchButtonTapped))
-        navigationItem.rightBarButtonItems = [searchButton, layoutButton]
+        layoutButton.setImage(AppIcons.grid, for: .normal)
+        layoutButton.accessibilityLabel = "Change layout"
+        layoutButton.addTarget(self, action: #selector(layoutButtonTapped), for: .touchUpInside)
+
+        let searchButton = UIButton(type: .system)
+        searchButton.setImage(AppIcons.search, for: .normal)
+        searchButton.accessibilityLabel = "Search"
+        searchButton.addTarget(self, action: #selector(searchButtonTapped), for: .touchUpInside)
+
+        // Both icons in one stack so the gap between them matches the design
+        let buttonStack = UIStackView(arrangedSubviews: [layoutButton, searchButton])
+        buttonStack.spacing = 14
+        let buttonsItem = UIBarButtonItem(customView: buttonStack)
+        // Plain icons like the design, without the iOS 26 glass capsule behind them
+        if #available(iOS 26.0, *) {
+            buttonsItem.hidesSharedBackground = true
+        }
+        navigationItem.rightBarButtonItem = buttonsItem
     }
 
     private func setupSearch() {
@@ -92,6 +106,13 @@ final class ArticleListViewController: UIViewController {
         searchController.delegate = self
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.placeholder = "Search articles"
+        searchController.searchBar.tintColor = .black
+        searchController.searchBar.autocapitalizationType = .none
+        // Keep the search bar at the top on iOS 26 too, instead of the bottom toolbar
+        navigationItem.preferredSearchBarPlacement = .stacked
+        if #available(iOS 26.0, *) {
+            navigationItem.searchBarPlacementAllowsToolbarIntegration = false
+        }
     }
 
     private func setupCollectionView() {
@@ -237,7 +258,7 @@ final class ArticleListViewController: UIViewController {
 
     @objc private func layoutButtonTapped() {
         isGridMode.toggle()
-        layoutButton.image = isGridMode ? AppIcons.list : AppIcons.grid
+        layoutButton.setImage(isGridMode ? AppIcons.list : AppIcons.grid, for: .normal)
 
         UIView.transition(with: collectionView, duration: 0.25, options: .transitionCrossDissolve) {
             self.collectionView.setCollectionViewLayout(self.isGridMode ? self.makeGridLayout() : self.makeListLayout(),
@@ -302,7 +323,9 @@ extension ArticleListViewController: UISearchResultsUpdating, UISearchController
     }
 
     func didPresentSearchController(_ searchController: UISearchController) {
-        searchController.searchBar.becomeFirstResponder()
+        DispatchQueue.main.async {
+            searchController.searchBar.becomeFirstResponder()
+        }
     }
 
     func didDismissSearchController(_ searchController: UISearchController) {

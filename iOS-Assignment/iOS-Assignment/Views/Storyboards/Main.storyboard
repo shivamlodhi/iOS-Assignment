@@ -93,8 +93,8 @@
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="Ds1-Ck-0aG" userLabel="Clock Image View">
                                                 <rect key="frame" x="32" y="158.33333333333334" width="18" height="18"/>
                                                 <constraints>
-                                                    <constraint firstAttribute="width" constant="18" id="Ds1-Cw-1a1"/>
-                                                    <constraint firstAttribute="height" constant="18" id="Ds1-Ch-1a2"/>
+                                                    <constraint firstAttribute="width" constant="20" id="Ds1-Cw-1a1"/>
+                                                    <constraint firstAttribute="height" constant="20" id="Ds1-Ch-1a2"/>
                                                 </constraints>
                                             </imageView>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10h ago" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ds1-Tm-0aH">
@@ -115,7 +115,7 @@
                                                     <constraint firstItem="Ds1-Iv-0aJ" firstAttribute="leading" secondItem="Ds1-Ic-0aI" secondAttribute="leading" id="Ds1-Ie-1a4"/>
                                                     <constraint firstAttribute="trailing" secondItem="Ds1-Iv-0aJ" secondAttribute="trailing" id="Ds1-Ie-1a5"/>
                                                     <constraint firstAttribute="bottom" secondItem="Ds1-Iv-0aJ" secondAttribute="bottom" id="Ds1-Ie-1a6"/>
-                                                    <constraint firstAttribute="width" secondItem="Ds1-Ic-0aI" secondAttribute="height" multiplier="2:1" id="Ds1-Ia-1a7"/>
+                                                    <constraint firstAttribute="width" secondItem="Ds1-Ic-0aI" secondAttribute="height" multiplier="16:9" id="Ds1-Ia-1a7"/>
                                                 </constraints>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Body" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ds1-Bd-0aK">

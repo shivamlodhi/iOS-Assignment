@@ -110,13 +110,17 @@ final class ArticleDetailViewController: UIViewController {
 
     private func setupViews() {
         view.backgroundColor = AppColors.detailBackground
+        // iOS 26 darkens content under the bar, the design header is a flat colour
+        if #available(iOS 26.0, *) {
+            scrollView.topEdgeEffect.isHidden = true
+        }
         headerView.backgroundColor = AppColors.cardBackground
 
         titleLabel.font = AppFonts.detailTitle
         titleLabel.textColor = .white
         titleLabel.adjustsFontForContentSizeCategory = true
 
-        timeLabel.font = AppFonts.date
+        timeLabel.font = AppFonts.time
         timeLabel.textColor = UIColor.white.withAlphaComponent(0.7)
         timeLabel.adjustsFontForContentSizeCategory = true
         clockImageView.image = AppIcons.clock
@@ -127,6 +131,7 @@ final class ArticleDetailViewController: UIViewController {
         imageContainerView.layer.shadowOffset = CGSize(width: 0, height: 4)
         imageContainerView.layer.shadowRadius = 8
 
+        bodyLabel.font = AppFonts.body
         bodyLabel.textColor = AppColors.bodyText
         bodyLabel.adjustsFontForContentSizeCategory = true
 
@@ -147,7 +152,7 @@ final class ArticleDetailViewController: UIViewController {
     }
 
     private func showArticle() {
-        titleLabel.text = article.title ?? "Untitled article"
+        titleLabel.setText(article.title ?? "Untitled article", lineSpacing: 6)
 
         timeLabel.text = DateHelper.timeAgo(from: article.publishedAt)
         clockImageView.isHidden = timeLabel.text == nil
@@ -155,12 +160,7 @@ final class ArticleDetailViewController: UIViewController {
         articleImageView.setImage(with: article.imageURL)
 
         let body = article.content ?? article.description ?? "No details available for this article."
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = 6
-        bodyLabel.attributedText = NSAttributedString(string: body, attributes: [
-            .font: AppFonts.body,
-            .paragraphStyle: paragraphStyle
-        ])
+        bodyLabel.setText(body, lineSpacing: 10)
 
         // Some articles have a missing or broken link
         readFullArticleButton.isHidden = article.articleURL == nil

@@ -51,8 +51,8 @@
                             <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rm8-Bt-6cD">
                                 <rect key="frame" x="180" y="0.0" width="140" height="44"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="140" id="Rw1-Bt-9yT"/>
-                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="44" id="Rh1-Bt-9yU"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="148" id="Rw1-Bt-9yT"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="Rh1-Bt-9yU"/>
                                 </constraints>
                                 <state key="normal" title="Read More"/>
                                 <connections>

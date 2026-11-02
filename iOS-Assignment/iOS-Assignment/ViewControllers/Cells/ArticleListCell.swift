@@ -70,7 +70,7 @@ final class ArticleListCell: UICollectionViewCell {
     }
 
     func configure(with article: Article) {
-        titleLabel.text = article.title ?? article.description
+        titleLabel.setText(article.title ?? article.description, lineSpacing: 6)
         dateLabel.text = DateHelper.displayDate(from: article.publishedAt)
         calendarImageView.isHidden = dateLabel.text == nil
         articleImageView.setImage(with: article.imageURL)

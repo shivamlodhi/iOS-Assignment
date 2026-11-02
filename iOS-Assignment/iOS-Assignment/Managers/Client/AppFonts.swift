@@ -21,6 +21,10 @@ enum AppFonts {
         scaled(.systemFont(ofSize: 12, weight: .regular), style: .footnote)
     }
 
+    static var time: UIFont {
+        scaled(.systemFont(ofSize: 14, weight: .regular), style: .subheadline)
+    }
+
     static var button: UIFont {
         scaled(.systemFont(ofSize: 14, weight: .semibold), style: .subheadline)
     }

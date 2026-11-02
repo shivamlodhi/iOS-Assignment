@@ -34,7 +34,7 @@ final class ArticleGridCell: UICollectionViewCell {
     }
 
     func configure(with article: Article) {
-        titleLabel.text = article.title ?? article.description
+        titleLabel.setText(article.title ?? article.description, lineSpacing: 6)
         articleImageView.setImage(with: article.imageURL)
     }
 }
