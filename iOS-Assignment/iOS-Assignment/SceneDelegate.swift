@@ -14,10 +14,32 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
-              let navigationController = window?.rootViewController as? UINavigationController,
-              let listViewController = navigationController.topViewController as? ArticleListViewController else { return }
+              let window,
+              let navigationController = window.rootViewController as? UINavigationController,
+              let listViewController = navigationController.topViewController as? ArticleListViewController,
+              let router = appDelegate.container.resolve(AppRouter.self) else { return }
 
         listViewController.articleManager = appDelegate.container.resolve(ArticleManager.self)
-        listViewController.router = appDelegate.container.resolve(AppRouter.self)
+        listViewController.router = router
+
+        // List and detail side by side on iPad, collapses to a single stack on iPhone
+        let splitViewController = UISplitViewController(style: .doubleColumn)
+        splitViewController.preferredDisplayMode = .oneBesideSecondary
+        splitViewController.preferredSplitBehavior = .tile
+        splitViewController.delegate = self
+        splitViewController.setViewController(navigationController, for: .primary)
+        splitViewController.setViewController(router.makeEmptyDetailViewController(), for: .secondary)
+        window.rootViewController = splitViewController
+    }
+}
+
+// MARK: - UISplitViewControllerDelegate
+
+extension SceneDelegate: UISplitViewControllerDelegate {
+
+    // Start with the list on iPhone instead of the empty detail screen
+    func splitViewController(_ svc: UISplitViewController,
+                             topColumnForCollapsingToProposedTopColumn proposedTopColumn: UISplitViewController.Column) -> UISplitViewController.Column {
+        .primary
     }
 }

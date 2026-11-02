@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 import Swinject
 
 final class AppRouter {
@@ -21,6 +22,17 @@ final class AppRouter {
         let detailViewController = storyboard.instantiateViewController(withIdentifier: "ArticleDetailViewController") as! ArticleDetailViewController
         detailViewController.article = article
         detailViewController.favoritesManager = resolver.resolve(FavoritesManager.self)
-        viewController.show(detailViewController, sender: viewController)
+        // iPhone pushes on the list, iPad replaces the detail column
+        if viewController.splitViewController?.isCollapsed ?? true {
+            viewController.navigationController?.pushViewController(detailViewController, animated: true)
+        } else {
+            viewController.showDetailViewController(UINavigationController(rootViewController: detailViewController),
+                                                    sender: viewController)
+        }
+    }
+
+    func makeEmptyDetailViewController() -> UIViewController {
+        UIHostingController(rootView: StateView(icon: "newspaper", title: "Select an article",
+                                                message: "Choose an article from the list to read it here."))
     }
 }
