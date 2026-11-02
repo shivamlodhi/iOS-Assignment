@@ -31,20 +31,29 @@ struct StateView: View {
                 .multilineTextAlignment(.center)
 
             if let onRetry {
-                Button(action: onRetry) {
-                    Label("Retry", systemImage: "arrow.counterclockwise")
-                        .font(.subheadline.weight(.semibold))
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 6)
-                        .background(Color(.systemGray6), in: Capsule())
-                        .overlay(Capsule().stroke(Color(.systemGray4), lineWidth: 1))
+                if #available(iOS 26.0, *) {
+                    Button(action: onRetry) { retryLabel }
+                        .buttonStyle(.glass)
+                } else {
+                    Button(action: onRetry) {
+                        retryLabel
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(Color(.systemGray6), in: Capsule())
+                            .overlay(Capsule().stroke(Color(.systemGray4), lineWidth: 1))
+                    }
+                    .foregroundStyle(.primary)
                 }
-                .foregroundStyle(.primary)
             }
         }
         .padding(24)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(.offlineBackground))
+    }
+
+    private var retryLabel: some View {
+        Label("Retry", systemImage: "arrow.counterclockwise")
+            .font(.subheadline.weight(.semibold))
     }
 }
 

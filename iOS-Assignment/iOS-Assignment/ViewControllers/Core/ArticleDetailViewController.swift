@@ -75,8 +75,20 @@ final class ArticleDetailViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setImage(AppIcons.back, for: .normal)
         button.tintColor = .white
-        button.backgroundColor = UIColor.white.withAlphaComponent(0.2)
         button.layer.cornerRadius = 22
+
+        // Liquid Glass on iOS 26, plain see-through circle on older versions
+        if #available(iOS 26.0, *) {
+            let glass = UIGlassEffect()
+            glass.tintColor = UIColor(red: 0.26, green: 0.35, blue: 0.38, alpha: 0.8)
+            let glassView = UIVisualEffectView(effect: glass)
+            glassView.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+            glassView.isUserInteractionEnabled = false
+            glassView.cornerConfiguration = .capsule()
+            button.insertSubview(glassView, at: 0)
+        } else {
+            button.backgroundColor = UIColor.white.withAlphaComponent(0.2)
+        }
         button.addTarget(self, action: #selector(backTapped), for: .touchUpInside)
         return makeBarItem(with: button, size: CGSize(width: 44, height: 44), inset: 8)
     }
