@@ -16,6 +16,7 @@ final class ArticleListCell: UICollectionViewCell {
     @IBOutlet private weak var calendarImageView: UIImageView!
     @IBOutlet private weak var dateLabel: UILabel!
     @IBOutlet private weak var readMoreButton: UIButton!
+    @IBOutlet private weak var footerStackView: UIStackView!
 
     var onReadMore: (() -> Void)?
 
@@ -48,6 +49,19 @@ final class ArticleListCell: UICollectionViewCell {
         config.baseForegroundColor = .white
         config.cornerStyle = .medium
         readMoreButton.configuration = config
+
+        updateForTextSize()
+        registerForTraitChanges([UITraitPreferredContentSizeCategory.self]) { (cell: Self, _) in
+            cell.updateForTextSize()
+        }
+    }
+
+    // With accessibility text sizes the date and button don't fit in one row
+    private func updateForTextSize() {
+        let isLargeText = traitCollection.preferredContentSizeCategory.isAccessibilityCategory
+        footerStackView.axis = isLargeText ? .vertical : .horizontal
+        footerStackView.alignment = isLargeText ? .leading : .center
+        titleLabel.numberOfLines = isLargeText ? 0 : 2
     }
 
     override func prepareForReuse() {

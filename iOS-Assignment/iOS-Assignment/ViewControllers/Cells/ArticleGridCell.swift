@@ -22,6 +22,15 @@ final class ArticleGridCell: UICollectionViewCell {
         titleLabel.font = AppFonts.cardTitle
         titleLabel.textColor = .white
         titleLabel.adjustsFontForContentSizeCategory = true
+
+        updateForTextSize()
+        registerForTraitChanges([UITraitPreferredContentSizeCategory.self]) { (cell: Self, _) in
+            cell.updateForTextSize()
+        }
+    }
+
+    private func updateForTextSize() {
+        titleLabel.numberOfLines = traitCollection.preferredContentSizeCategory.isAccessibilityCategory ? 0 : 2
     }
 
     func configure(with article: Article) {

@@ -99,6 +99,13 @@ final class ArticleListViewController: UIViewController {
 
         refreshControl.addTarget(self, action: #selector(pullToRefresh), for: .valueChanged)
         collectionView.refreshControl = refreshControl
+
+        // Grid switches to one column for accessibility text sizes
+        registerForTraitChanges([UITraitPreferredContentSizeCategory.self]) { (viewController: Self, _) in
+            if viewController.isGridMode {
+                viewController.collectionView.setCollectionViewLayout(viewController.makeGridLayout(), animated: false)
+            }
+        }
     }
 
     // MARK: - Layouts
@@ -115,7 +122,7 @@ final class ArticleListViewController: UIViewController {
     }
 
     private func makeGridLayout() -> UICollectionViewLayout {
-        let columns = 2
+        let columns = traitCollection.preferredContentSizeCategory.isAccessibilityCategory ? 1 : 2
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1 / CGFloat(columns)),
                                               heightDimension: .estimated(160))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)

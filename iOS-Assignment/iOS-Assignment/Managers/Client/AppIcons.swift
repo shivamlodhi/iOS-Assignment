@@ -16,7 +16,7 @@ enum AppIcons {
     static let calendar = UIImage(systemName: "calendar")
     static let clock = UIImage(systemName: "clock")
     static let readMore = UIImage(systemName: "arrow.right.circle.fill")
-    static let back = UIImage(systemName: "arrow.left")
+    static let back = UIImage(systemName: "arrow.left", withConfiguration: UIImage.SymbolConfiguration(pointSize: 18, weight: .medium))
     static let favorite = UIImage(resource: .favorite)
     static let favoriteSaved = UIImage(resource: .favoriteSaved)
     static let offline = UIImage(systemName: "wifi.slash")
