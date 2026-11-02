@@ -15,6 +15,7 @@ final class ArticleListViewController: UIViewController {
     @IBOutlet private weak var activityIndicator: UIActivityIndicatorView!
 
     var articleManager: ArticleManager!
+    var router: AppRouter!
 
     private var articles: [Article] = []
     private var searchText = ""
@@ -46,6 +47,12 @@ final class ArticleListViewController: UIViewController {
                                                name: .connectivityChanged, object: nil)
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.tintColor = .label
+        navigationController?.navigationBar.layer.shadowOpacity = 0.08
+    }
+
     private func setupNavigationBar() {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
@@ -56,9 +63,7 @@ final class ArticleListViewController: UIViewController {
 
         // Soft shadow under the header like in the design
         let navigationBar = navigationController?.navigationBar
-        navigationBar?.tintColor = .label
         navigationBar?.layer.shadowColor = UIColor.black.cgColor
-        navigationBar?.layer.shadowOpacity = 0.08
         navigationBar?.layer.shadowOffset = CGSize(width: 0, height: 6)
         navigationBar?.layer.shadowRadius = 8
 
@@ -259,6 +264,10 @@ extension ArticleListViewController: UICollectionViewDataSource {
 
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ArticleListCell.identifier, for: indexPath) as! ArticleListCell
         cell.configure(with: article)
+        cell.onReadMore = { [weak self] in
+            guard let self else { return }
+            self.router.showDetail(for: article, from: self)
+        }
         return cell
     }
 }
@@ -266,6 +275,10 @@ extension ArticleListViewController: UICollectionViewDataSource {
 // MARK: - UICollectionViewDelegate
 
 extension ArticleListViewController: UICollectionViewDelegate {
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        router.showDetail(for: visibleArticles[indexPath.item], from: self)
+    }
 }
 
 // MARK: - Search

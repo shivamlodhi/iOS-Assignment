@@ -41,6 +41,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                            cache: resolver.resolve(ArticleCache.self)!,
                            reachability: resolver.resolve(ReachabilityService.self)!)
         }.inObjectScope(.container)
+
+        container.register(FavoritesManager.self) { _ in
+            FavoritesManager()
+        }.inObjectScope(.container)
+
+        container.register(AppRouter.self) { resolver in
+            AppRouter(resolver: resolver)
+        }.inObjectScope(.container)
     }
 
     // MARK: UISceneSession Lifecycle

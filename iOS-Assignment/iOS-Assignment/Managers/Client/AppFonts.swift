@@ -25,6 +25,10 @@ enum AppFonts {
         scaled(.systemFont(ofSize: 14, weight: .semibold), style: .subheadline)
     }
 
+    static var navigationTitle: UIFont {
+        scaled(.systemFont(ofSize: 18, weight: .semibold), style: .headline)
+    }
+
     static var detailTitle: UIFont {
         scaled(.systemFont(ofSize: 22, weight: .bold), style: .title2)
     }

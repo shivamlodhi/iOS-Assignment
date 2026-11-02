@@ -67,6 +67,137 @@
             </objects>
             <point key="canvasLocation" x="0.0" y="0.0"/>
         </scene>
+        <!--Article Detail-->
+        <scene sceneID="Ds1-Sc-0aP">
+            <objects>
+                <viewController storyboardIdentifier="ArticleDetailViewController" id="Ds1-Vc-0aO" customClass="ArticleDetailViewController" customModule="iOS_Assignment" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Ds1-Vw-0aM">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" contentInsetAdjustmentBehavior="never" translatesAutoresizingMaskIntoConstraints="NO" id="Ds1-Sv-0aA">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ds1-Cv-0aD" userLabel="Content View">
+                                        <rect key="frame" x="0.0" y="0.0" width="393" height="514"/>
+                                        <subviews>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ds1-Hv-0aE" userLabel="Header View">
+                                                <rect key="frame" x="0.0" y="-400" width="393" height="682"/>
+                                            </view>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ds1-Tl-0aF">
+                                                <rect key="frame" x="32" y="120" width="329" height="26.333333333333343"/>
+                                                <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="Ds1-Ck-0aG" userLabel="Clock Image View">
+                                                <rect key="frame" x="32" y="158.33333333333334" width="18" height="18"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="18" id="Ds1-Cw-1a1"/>
+                                                    <constraint firstAttribute="height" constant="18" id="Ds1-Ch-1a2"/>
+                                                </constraints>
+                                            </imageView>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10h ago" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ds1-Tm-0aH">
+                                                <rect key="frame" x="58" y="159.66666666666666" width="47.666666666666657" height="15.666666666666657"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ds1-Ic-0aI" userLabel="Image Container View">
+                                                <rect key="frame" x="32" y="200.33333333333334" width="329" height="164.66666666666666"/>
+                                                <subviews>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ds1-Iv-0aJ" customClass="ArticleImageView" customModule="iOS_Assignment" customModuleProvider="target">
+                                                        <rect key="frame" x="0.0" y="0.0" width="329" height="164.66666666666666"/>
+                                                    </view>
+                                                </subviews>
+                                                <constraints>
+                                                    <constraint firstItem="Ds1-Iv-0aJ" firstAttribute="top" secondItem="Ds1-Ic-0aI" secondAttribute="top" id="Ds1-Ie-1a3"/>
+                                                    <constraint firstItem="Ds1-Iv-0aJ" firstAttribute="leading" secondItem="Ds1-Ic-0aI" secondAttribute="leading" id="Ds1-Ie-1a4"/>
+                                                    <constraint firstAttribute="trailing" secondItem="Ds1-Iv-0aJ" secondAttribute="trailing" id="Ds1-Ie-1a5"/>
+                                                    <constraint firstAttribute="bottom" secondItem="Ds1-Iv-0aJ" secondAttribute="bottom" id="Ds1-Ie-1a6"/>
+                                                    <constraint firstAttribute="width" secondItem="Ds1-Ic-0aI" secondAttribute="height" multiplier="2:1" id="Ds1-Ia-1a7"/>
+                                                </constraints>
+                                            </view>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Body" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ds1-Bd-0aK">
+                                                <rect key="frame" x="32" y="389" width="329" height="19.333333333333314"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                <nil key="textColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ds1-Bt-0aL">
+                                                <rect key="frame" x="32" y="432.33333333333331" width="329" height="50"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="50" id="Ds1-Bh-1a8"/>
+                                                </constraints>
+                                                <state key="normal" title="Read Full Article"/>
+                                                <connections>
+                                                    <action selector="readFullArticleTapped" destination="Ds1-Vc-0aO" eventType="touchUpInside" id="Ds1-Ba-1a9"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstItem="Ds1-Hv-0aE" firstAttribute="top" secondItem="Ds1-Cv-0aD" secondAttribute="top" constant="-400" id="Ds1-Cn-2b1"/>
+                                            <constraint firstItem="Ds1-Hv-0aE" firstAttribute="leading" secondItem="Ds1-Cv-0aD" secondAttribute="leading" id="Ds1-Cn-2b2"/>
+                                            <constraint firstAttribute="trailing" secondItem="Ds1-Hv-0aE" secondAttribute="trailing" id="Ds1-Cn-2b3"/>
+                                            <constraint firstItem="Ds1-Hv-0aE" firstAttribute="bottom" secondItem="Ds1-Ic-0aI" secondAttribute="centerY" id="Ds1-Cn-2b4"/>
+                                            <constraint firstItem="Ds1-Tl-0aF" firstAttribute="top" secondItem="Ds1-Cv-0aD" secondAttribute="top" constant="120" id="Ds1-Cn-2b5"/>
+                                            <constraint firstItem="Ds1-Tl-0aF" firstAttribute="leading" secondItem="Ds1-Cv-0aD" secondAttribute="leading" constant="32" id="Ds1-Cn-2b6"/>
+                                            <constraint firstAttribute="trailing" secondItem="Ds1-Tl-0aF" secondAttribute="trailing" constant="32" id="Ds1-Cn-2b7"/>
+                                            <constraint firstItem="Ds1-Ck-0aG" firstAttribute="top" secondItem="Ds1-Tl-0aF" secondAttribute="bottom" constant="12" id="Ds1-Cn-2b8"/>
+                                            <constraint firstItem="Ds1-Ck-0aG" firstAttribute="leading" secondItem="Ds1-Cv-0aD" secondAttribute="leading" constant="32" id="Ds1-Cn-2b9"/>
+                                            <constraint firstItem="Ds1-Tm-0aH" firstAttribute="leading" secondItem="Ds1-Ck-0aG" secondAttribute="trailing" constant="8" id="Ds1-Cn-2c1"/>
+                                            <constraint firstItem="Ds1-Tm-0aH" firstAttribute="centerY" secondItem="Ds1-Ck-0aG" secondAttribute="centerY" id="Ds1-Cn-2c2"/>
+                                            <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Ds1-Tm-0aH" secondAttribute="trailing" constant="32" id="Ds1-Cn-2c3"/>
+                                            <constraint firstItem="Ds1-Ic-0aI" firstAttribute="top" secondItem="Ds1-Ck-0aG" secondAttribute="bottom" constant="24" id="Ds1-Cn-2c4"/>
+                                            <constraint firstItem="Ds1-Ic-0aI" firstAttribute="leading" secondItem="Ds1-Cv-0aD" secondAttribute="leading" constant="32" id="Ds1-Cn-2c5"/>
+                                            <constraint firstAttribute="trailing" secondItem="Ds1-Ic-0aI" secondAttribute="trailing" constant="32" id="Ds1-Cn-2c6"/>
+                                            <constraint firstItem="Ds1-Bd-0aK" firstAttribute="top" secondItem="Ds1-Ic-0aI" secondAttribute="bottom" constant="24" id="Ds1-Cn-2c7"/>
+                                            <constraint firstItem="Ds1-Bd-0aK" firstAttribute="leading" secondItem="Ds1-Cv-0aD" secondAttribute="leading" constant="32" id="Ds1-Cn-2c8"/>
+                                            <constraint firstAttribute="trailing" secondItem="Ds1-Bd-0aK" secondAttribute="trailing" constant="32" id="Ds1-Cn-2c9"/>
+                                            <constraint firstItem="Ds1-Bt-0aL" firstAttribute="top" secondItem="Ds1-Bd-0aK" secondAttribute="bottom" constant="24" id="Ds1-Cn-2d1"/>
+                                            <constraint firstItem="Ds1-Bt-0aL" firstAttribute="leading" secondItem="Ds1-Cv-0aD" secondAttribute="leading" constant="32" id="Ds1-Cn-2d2"/>
+                                            <constraint firstAttribute="trailing" secondItem="Ds1-Bt-0aL" secondAttribute="trailing" constant="32" id="Ds1-Cn-2d3"/>
+                                            <constraint firstAttribute="bottom" secondItem="Ds1-Bt-0aL" secondAttribute="bottom" constant="32" id="Ds1-Cn-2d4"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="Ds1-Cv-0aD" firstAttribute="top" secondItem="Ds1-Cg-0aB" secondAttribute="top" id="Ds1-Sc-3e1"/>
+                                    <constraint firstItem="Ds1-Cv-0aD" firstAttribute="leading" secondItem="Ds1-Cg-0aB" secondAttribute="leading" id="Ds1-Sc-3e2"/>
+                                    <constraint firstItem="Ds1-Cv-0aD" firstAttribute="trailing" secondItem="Ds1-Cg-0aB" secondAttribute="trailing" id="Ds1-Sc-3e3"/>
+                                    <constraint firstItem="Ds1-Cv-0aD" firstAttribute="bottom" secondItem="Ds1-Cg-0aB" secondAttribute="bottom" id="Ds1-Sc-3e4"/>
+                                    <constraint firstItem="Ds1-Cv-0aD" firstAttribute="width" secondItem="Ds1-Fg-0aC" secondAttribute="width" id="Ds1-Sc-3e5"/>
+                                </constraints>
+                                <viewLayoutGuide key="contentLayoutGuide" id="Ds1-Cg-0aB"/>
+                                <viewLayoutGuide key="frameLayoutGuide" id="Ds1-Fg-0aC"/>
+                            </scrollView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Ds1-Sa-0aN"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="Ds1-Sv-0aA" firstAttribute="top" secondItem="Ds1-Vw-0aM" secondAttribute="top" id="Ds1-Vc-4f1"/>
+                            <constraint firstItem="Ds1-Sv-0aA" firstAttribute="leading" secondItem="Ds1-Vw-0aM" secondAttribute="leading" id="Ds1-Vc-4f2"/>
+                            <constraint firstAttribute="trailing" secondItem="Ds1-Sv-0aA" secondAttribute="trailing" id="Ds1-Vc-4f3"/>
+                            <constraint firstAttribute="bottom" secondItem="Ds1-Sv-0aA" secondAttribute="bottom" id="Ds1-Vc-4f4"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="articleImageView" destination="Ds1-Iv-0aJ" id="Ds1-Ou-5g1"/>
+                        <outlet property="bodyLabel" destination="Ds1-Bd-0aK" id="Ds1-Ou-5g2"/>
+                        <outlet property="clockImageView" destination="Ds1-Ck-0aG" id="Ds1-Ou-5g3"/>
+                        <outlet property="headerView" destination="Ds1-Hv-0aE" id="Ds1-Ou-5g4"/>
+                        <outlet property="imageContainerView" destination="Ds1-Ic-0aI" id="Ds1-Ou-5g5"/>
+                        <outlet property="readFullArticleButton" destination="Ds1-Bt-0aL" id="Ds1-Ou-5g6"/>
+                        <outlet property="scrollView" destination="Ds1-Sv-0aA" id="Ds1-Ou-5g7"/>
+                        <outlet property="timeLabel" destination="Ds1-Tm-0aH" id="Ds1-Ou-5g8"/>
+                        <outlet property="titleLabel" destination="Ds1-Tl-0aF" id="Ds1-Ou-5g9"/>
+                        <outlet property="titleTopConstraint" destination="Ds1-Cn-2b5" id="Ds1-Ou-5h1"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ds1-Fr-0aQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="700" y="0.0"/>
+        </scene>
     </scenes>
     <resources>
         <systemColor name="systemBackgroundColor">

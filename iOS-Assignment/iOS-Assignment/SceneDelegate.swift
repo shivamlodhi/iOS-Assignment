@@ -18,5 +18,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
               let listViewController = navigationController.topViewController as? ArticleListViewController else { return }
 
         listViewController.articleManager = appDelegate.container.resolve(ArticleManager.self)
+        listViewController.router = appDelegate.container.resolve(AppRouter.self)
     }
 }
