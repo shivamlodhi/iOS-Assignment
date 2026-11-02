@@ -13,7 +13,7 @@ extension Notification.Name {
     static let connectivityChanged = Notification.Name("connectivityChanged")
 }
 
-final class ReachabilityService {
+final class ReachabilityService: ReachabilityProtocol {
 
     private let reachability = try? Reachability()
 
@@ -37,10 +37,6 @@ final class ReachabilityService {
         } catch {
             log.error("Unable to start reachability notifier: \(error.localizedDescription)")
         }
-    }
-
-    func stop() {
-        reachability?.stopNotifier()
     }
 
     private func postChange() {

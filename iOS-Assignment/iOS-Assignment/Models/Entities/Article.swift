@@ -23,7 +23,12 @@ struct Article: Codable, Hashable {
     }
 
     var articleURL: URL? {
-        guard let url, let link = URL(string: url), link.scheme?.hasPrefix("http") == true else { return nil }
+        guard let url, let link = URL(string: url), ["http", "https"].contains(link.scheme?.lowercased()) else { return nil }
         return link
+    }
+
+    func matches(_ searchText: String) -> Bool {
+        (title ?? "").localizedCaseInsensitiveContains(searchText) ||
+        (description ?? "").localizedCaseInsensitiveContains(searchText)
     }
 }

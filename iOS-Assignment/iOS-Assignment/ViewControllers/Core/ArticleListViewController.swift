@@ -18,22 +18,16 @@ final class ArticleListViewController: UIViewController {
     var router: AppRouter!
 
     private var articles: [Article] = []
+    // Articles after applying the search text
+    private var visibleArticles: [Article] = []
     private var searchText = ""
     private var isGridMode = false
+    private var wasConnected = true
 
     private let refreshControl = UIRefreshControl()
     private var stateViewController: UIHostingController<StateView>?
     private let searchController = UISearchController(searchResultsController: nil)
     private let layoutButton = UIButton(type: .system)
-
-    // Articles after applying the search text
-    private var visibleArticles: [Article] {
-        guard !searchText.isEmpty else { return articles }
-        return articles.filter {
-            ($0.title ?? "").localizedCaseInsensitiveContains(searchText) ||
-            ($0.description ?? "").localizedCaseInsensitiveContains(searchText)
-        }
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,6 +36,7 @@ final class ArticleListViewController: UIViewController {
         setupCollectionView()
         loadArticles()
 
+        wasConnected = articleManager.isConnected
         NotificationCenter.default.addObserver(self, selector: #selector(connectivityChanged),
                                                name: .connectivityChanged, object: nil)
     }
@@ -70,7 +65,7 @@ final class ArticleListViewController: UIViewController {
 
         // Title sits on the left, in the same row as the buttons
         let titleLabel = UILabel()
-        titleLabel.text = "Articles"
+        titleLabel.text = AppStrings.articlesTitle
         titleLabel.font = AppFonts.screenTitle
         titleLabel.textColor = .black
         titleLabel.adjustsFontForContentSizeCategory = true
@@ -82,12 +77,12 @@ final class ArticleListViewController: UIViewController {
         navigationItem.backButtonDisplayMode = .minimal
 
         layoutButton.setImage(AppIcons.grid, for: .normal)
-        layoutButton.accessibilityLabel = "Change layout"
+        layoutButton.accessibilityLabel = AppStrings.changeLayout
         layoutButton.addTarget(self, action: #selector(layoutButtonTapped), for: .touchUpInside)
 
         let searchButton = UIButton(type: .system)
         searchButton.setImage(AppIcons.search, for: .normal)
-        searchButton.accessibilityLabel = "Search"
+        searchButton.accessibilityLabel = AppStrings.search
         searchButton.addTarget(self, action: #selector(searchButtonTapped), for: .touchUpInside)
 
         // Both icons in one stack so the gap between them matches the design
@@ -105,7 +100,7 @@ final class ArticleListViewController: UIViewController {
         searchController.searchResultsUpdater = self
         searchController.delegate = self
         searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.placeholder = "Search articles"
+        searchController.searchBar.placeholder = AppStrings.searchPlaceholder
         searchController.searchBar.tintColor = .black
         searchController.searchBar.autocapitalizationType = .none
         // Keep the search bar at the top on iOS 26 too, instead of the bottom toolbar
@@ -185,11 +180,12 @@ final class ArticleListViewController: UIViewController {
                 log.warning("Showing cached articles: \(error.message)")
                 self.articles = articles
                 self.reloadContent()
-                let message = error == .noInternet ? "You’re offline. Showing saved articles." : "Couldn’t refresh. Showing saved articles."
+                let message = error == .noInternet ? AppStrings.offlineToast : AppStrings.refreshFailedToast
                 ToastHelper.showWarning(message, on: self)
             case .failure(let error):
                 log.error("No articles to show: \(error.message)")
                 self.articles = []
+                self.visibleArticles = []
                 self.collectionView.reloadData()
                 self.showState(error == .noInternet ? .offline(onRetry: self.retry) : .error(error, onRetry: self.retry))
             }
@@ -197,6 +193,7 @@ final class ArticleListViewController: UIViewController {
     }
 
     private func reloadContent() {
+        visibleArticles = searchText.isEmpty ? articles : articles.filter { $0.matches(searchText) }
         collectionView.reloadData()
 
         if articles.isEmpty {
@@ -249,10 +246,16 @@ final class ArticleListViewController: UIViewController {
     }
 
     @objc private func connectivityChanged() {
-        if articleManager.isConnected {
+        // Reachability also posts when it starts, only react to a real change
+        let isConnected = articleManager.isConnected
+        guard isConnected != wasConnected else { return }
+        wasConnected = isConnected
+
+        if isConnected {
             loadArticles()
-        } else {
-            ToastHelper.showWarning("You’re offline. Showing saved articles.", on: self)
+        } else if !articles.isEmpty {
+            // With no articles the offline screen already says it
+            ToastHelper.showWarning(AppStrings.offlineToast, on: self)
         }
     }
 

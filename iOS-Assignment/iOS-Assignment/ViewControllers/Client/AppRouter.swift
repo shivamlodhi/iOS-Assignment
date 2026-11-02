@@ -36,7 +36,7 @@ final class AppRouter {
     }
 
     func makeEmptyDetailViewController() -> UIViewController {
-        UIHostingController(rootView: StateView(icon: "newspaper", title: "Select an article",
-                                                message: "Choose an article from the list to read it here."))
+        UIHostingController(rootView: StateView(icon: AppIcons.articleSymbol, title: AppStrings.selectArticleTitle,
+                                                message: AppStrings.selectArticleMessage))
     }
 }

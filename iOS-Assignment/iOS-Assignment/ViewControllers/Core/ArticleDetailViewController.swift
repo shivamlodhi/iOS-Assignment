@@ -37,9 +37,13 @@ final class ArticleDetailViewController: UIViewController {
         super.viewWillAppear(animated)
         // Dark header, so the status bar and bar content stay light
         navigationController?.navigationBar.overrideUserInterfaceStyle = .dark
-        // iPad shows the detail as the root of its column, so there is nothing to go back to
-        let canGoBack = navigationController?.viewControllers.first != self
-        navigationItem.leftBarButtonItem = canGoBack ? makeBackButton() : nil
+        updateBackButton()
+    }
+
+    // Also called when the iPad window shrinks and the detail moves onto the list's stack
+    override func didMove(toParent parent: UIViewController?) {
+        super.didMove(toParent: parent)
+        updateBackButton()
     }
 
     override func viewSafeAreaInsetsDidChange() {
@@ -49,7 +53,7 @@ final class ArticleDetailViewController: UIViewController {
     }
 
     private func setupNavigationBar() {
-        title = "Article"
+        title = AppStrings.articleTitle
         let transparent = UINavigationBarAppearance()
         transparent.configureWithTransparentBackground()
         transparent.titleTextAttributes = [.foregroundColor: UIColor.white, .font: AppFonts.navigationTitle]
@@ -68,8 +72,17 @@ final class ArticleDetailViewController: UIViewController {
         favoriteButton.contentHorizontalAlignment = .fill
         favoriteButton.contentVerticalAlignment = .fill
         favoriteButton.addTarget(self, action: #selector(favoriteTapped), for: .touchUpInside)
-        navigationItem.rightBarButtonItem = makeBarItem(with: favoriteButton, size: CGSize(width: 30, height: 25), inset: -8)
-        updateFavoriteButton()
+        // Favourites are saved by link, so articles without one can't be saved
+        if article.url != nil {
+            navigationItem.rightBarButtonItem = makeBarItem(with: favoriteButton, size: CGSize(width: 30, height: 25), inset: -8)
+            updateFavoriteButton()
+        }
+    }
+
+    // iPad shows the detail as the root of its column, so there is nothing to go back to
+    private func updateBackButton() {
+        let canGoBack = navigationController?.viewControllers.first != self
+        navigationItem.leftBarButtonItem = canGoBack ? makeBackButton() : nil
     }
 
     // Round back button from the design
@@ -82,14 +95,14 @@ final class ArticleDetailViewController: UIViewController {
         // Liquid Glass on iOS 26, plain see-through circle on older versions
         if #available(iOS 26.0, *) {
             let glass = UIGlassEffect()
-            glass.tintColor = UIColor(red: 0.26, green: 0.35, blue: 0.38, alpha: 0.8)
+            glass.tintColor = AppColors.backButtonGlass
             let glassView = UIVisualEffectView(effect: glass)
             glassView.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
             glassView.isUserInteractionEnabled = false
             glassView.cornerConfiguration = .capsule()
             button.insertSubview(glassView, at: 0)
         } else {
-            button.backgroundColor = UIColor.white.withAlphaComponent(0.2)
+            button.backgroundColor = AppColors.backButtonBackground
         }
         button.addTarget(self, action: #selector(backTapped), for: .touchUpInside)
         return makeBarItem(with: button, size: CGSize(width: 44, height: 44), inset: 8)
@@ -121,10 +134,10 @@ final class ArticleDetailViewController: UIViewController {
         titleLabel.adjustsFontForContentSizeCategory = true
 
         timeLabel.font = AppFonts.time
-        timeLabel.textColor = UIColor.white.withAlphaComponent(0.7)
+        timeLabel.textColor = AppColors.detailMetaText
         timeLabel.adjustsFontForContentSizeCategory = true
         clockImageView.image = AppIcons.clock
-        clockImageView.tintColor = UIColor.white.withAlphaComponent(0.7)
+        clockImageView.tintColor = AppColors.detailMetaText
 
         imageContainerView.layer.shadowColor = UIColor.black.cgColor
         imageContainerView.layer.shadowOpacity = 0.25
@@ -135,31 +148,18 @@ final class ArticleDetailViewController: UIViewController {
         bodyLabel.textColor = AppColors.bodyText
         bodyLabel.adjustsFontForContentSizeCategory = true
 
-        var config = UIButton.Configuration.filled()
-        config.title = "Read Full Article"
-        config.image = UIImage(systemName: "safari")
-        config.imagePlacement = .trailing
-        config.imagePadding = 10
-        config.baseBackgroundColor = AppColors.primaryBlue
-        config.baseForegroundColor = .white
-        config.cornerStyle = .medium
-        config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { attributes in
-            var attributes = attributes
-            attributes.font = AppFonts.button
-            return attributes
-        }
-        readFullArticleButton.configuration = config
+        readFullArticleButton.configuration = .primary(title: AppStrings.readFullArticle, image: AppIcons.safari, imagePadding: 10)
     }
 
     private func showArticle() {
-        titleLabel.setText(article.title ?? "Untitled article", lineSpacing: 6)
+        titleLabel.setText(article.title ?? AppStrings.untitledArticle, lineSpacing: 6)
 
         timeLabel.text = DateHelper.timeAgo(from: article.publishedAt)
         clockImageView.isHidden = timeLabel.text == nil
 
         articleImageView.setImage(with: article.imageURL)
 
-        let body = article.content ?? article.description ?? "No details available for this article."
+        let body = article.content ?? article.description ?? AppStrings.noDetails
         bodyLabel.setText(body, lineSpacing: 10)
 
         // Some articles have a missing or broken link

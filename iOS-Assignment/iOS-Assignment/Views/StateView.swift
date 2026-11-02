@@ -52,7 +52,7 @@ struct StateView: View {
     }
 
     private var retryLabel: some View {
-        Label("Retry", systemImage: "arrow.counterclockwise")
+        Label(AppStrings.retry, systemImage: AppIcons.retrySymbol)
             .font(.subheadline.weight(.semibold))
     }
 }
@@ -60,23 +60,23 @@ struct StateView: View {
 extension StateView {
 
     static func offline(onRetry: @escaping () -> Void) -> StateView {
-        StateView(icon: "wifi.slash", title: "You’re offline",
-                  message: "Please connect to the internet and try again.", onRetry: onRetry)
+        StateView(icon: AppIcons.offlineSymbol, title: AppStrings.offlineTitle,
+                  message: AppStrings.noInternetMessage, onRetry: onRetry)
     }
 
     static func error(_ error: APIError, onRetry: @escaping () -> Void) -> StateView {
-        StateView(icon: "exclamationmark.triangle", title: "Something went wrong",
+        StateView(icon: AppIcons.errorSymbol, title: AppStrings.errorTitle,
                   message: error.message, onRetry: onRetry)
     }
 
     static func empty(onRetry: @escaping () -> Void) -> StateView {
-        StateView(icon: "newspaper", title: "No articles yet",
-                  message: "There are no articles to show right now.", onRetry: onRetry)
+        StateView(icon: AppIcons.articleSymbol, title: AppStrings.emptyTitle,
+                  message: AppStrings.emptyMessage, onRetry: onRetry)
     }
 
     static func noResults(for searchText: String) -> StateView {
-        StateView(icon: "magnifyingglass", title: "No results",
-                  message: "No articles match “\(searchText)”.")
+        StateView(icon: AppIcons.searchSymbol, title: AppStrings.noResultsTitle,
+                  message: AppStrings.noResultsMessage(for: searchText))
     }
 }
 

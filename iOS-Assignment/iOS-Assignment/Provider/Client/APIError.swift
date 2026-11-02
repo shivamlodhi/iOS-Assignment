@@ -16,21 +16,23 @@ enum APIError: Error {
     init(_ error: AFError) {
         if error.isResponseSerializationError {
             self = .invalidData
-        } else if error.responseCode != nil {
-            self = .serverError
-        } else {
+        } else if let urlError = error.underlyingError as? URLError,
+                  [.notConnectedToInternet, .networkConnectionLost, .dataNotAllowed].contains(urlError.code) {
             self = .noInternet
+        } else {
+            // Server errors, timeouts and anything else
+            self = .serverError
         }
     }
 
     var message: String {
         switch self {
         case .noInternet:
-            return "Please connect to the internet and try again."
+            return AppStrings.noInternetMessage
         case .serverError:
-            return "Server is not responding right now. Please try again later."
+            return AppStrings.serverErrorMessage
         case .invalidData:
-            return "We couldn't read the articles. Please try again later."
+            return AppStrings.invalidDataMessage
         }
     }
 }

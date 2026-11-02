@@ -35,20 +35,7 @@ final class ArticleListCell: UICollectionViewCell {
         calendarImageView.image = AppIcons.calendar
         calendarImageView.tintColor = AppColors.dateText
 
-        var config = UIButton.Configuration.filled()
-        config.title = "Read More"
-        config.titleTextAttributesTransformer = UIConfigurationTextAttributesTransformer { attributes in
-            var attributes = attributes
-            attributes.font = AppFonts.button
-            return attributes
-        }
-        config.image = AppIcons.readMore
-        config.imagePlacement = .trailing
-        config.imagePadding = 16
-        config.baseBackgroundColor = AppColors.primaryBlue
-        config.baseForegroundColor = .white
-        config.cornerStyle = .medium
-        readMoreButton.configuration = config
+        readMoreButton.configuration = .primary(title: AppStrings.readMore, image: AppIcons.readMore, imagePadding: 16)
 
         updateForTextSize()
         registerForTraitChanges([UITraitPreferredContentSizeCategory.self]) { (cell: Self, _) in

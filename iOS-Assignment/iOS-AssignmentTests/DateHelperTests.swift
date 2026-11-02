@@ -14,6 +14,10 @@ final class DateHelperTests: XCTestCase {
         XCTAssertEqual(DateHelper.displayDate(from: "2025-03-07T11:00:59Z"), "07 Mar,2025")
     }
 
+    func testDateWithFractionalSeconds() {
+        XCTAssertEqual(DateHelper.displayDate(from: "2025-03-07T11:00:59.000Z"), "07 Mar,2025")
+    }
+
     func testInvalidDateGivesNil() {
         XCTAssertNil(DateHelper.displayDate(from: "wrong date"))
         XCTAssertNil(DateHelper.timeAgo(from: nil))

@@ -18,9 +18,9 @@ final class ArticleManager {
 
     private let provider: ArticleProviderProtocol
     private let cache: ArticleCache
-    private let reachability: ReachabilityService
+    private let reachability: ReachabilityProtocol
 
-    init(provider: ArticleProviderProtocol, cache: ArticleCache, reachability: ReachabilityService) {
+    init(provider: ArticleProviderProtocol, cache: ArticleCache, reachability: ReachabilityProtocol) {
         self.provider = provider
         self.cache = cache
         self.reachability = reachability
@@ -43,7 +43,10 @@ final class ArticleManager {
             switch result {
             case .success(let articles):
                 let validArticles = articles.filter { !($0.title ?? "").isEmpty || !($0.description ?? "").isEmpty }
-                self.cache.save(validArticles)
+                // Keep the saved articles if the server sends an empty list
+                if !validArticles.isEmpty {
+                    self.cache.save(validArticles)
+                }
                 completion(.fresh(validArticles))
             case .failure(let error):
                 completion(self.fallback(for: error))

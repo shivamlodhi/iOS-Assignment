@@ -25,12 +25,15 @@ final class ArticleCache {
         }
     }
 
+    // Writes to disk in the background
     func save(_ articles: [Article]) {
-        do {
-            try storage?.setObject(articles, forKey: key)
-            log.debug("Saved \(articles.count) articles to cache")
-        } catch {
-            log.error("Unable to save articles: \(error.localizedDescription)")
+        storage?.async.setObject(articles, forKey: key) { result in
+            switch result {
+            case .value:
+                log.debug("Saved \(articles.count) articles to cache")
+            case .error(let error):
+                log.error("Unable to save articles: \(error.localizedDescription)")
+            }
         }
     }
 

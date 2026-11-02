@@ -37,9 +37,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 extension SceneDelegate: UISplitViewControllerDelegate {
 
-    // Start with the list on iPhone instead of the empty detail screen
+    // Start with the list on iPhone, but keep the open article when an iPad window gets narrow
     func splitViewController(_ svc: UISplitViewController,
                              topColumnForCollapsingToProposedTopColumn proposedTopColumn: UISplitViewController.Column) -> UISplitViewController.Column {
-        .primary
+        let detailNavigationController = svc.viewController(for: .secondary) as? UINavigationController
+        return detailNavigationController?.topViewController is ArticleDetailViewController ? .secondary : .primary
     }
 }
