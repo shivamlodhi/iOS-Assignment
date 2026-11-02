@@ -13,11 +13,11 @@ enum DateHelper {
 
     private static let displayFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateFormat = "dd MMM, yyyy"
+        formatter.dateFormat = "dd MMM,yyyy"
         return formatter
     }()
 
-    // "2025-03-07T11:00:59Z" -> "07 Mar, 2025"
+    // "2025-03-07T11:00:59Z" -> "07 Mar,2025"
     static func displayDate(from string: String?) -> String? {
         guard let string, let date = isoFormatter.date(from: string) else { return nil }
         return displayFormatter.string(from: date)

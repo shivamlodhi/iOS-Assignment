@@ -57,7 +57,7 @@
                             <constraint firstItem="Ai1-Lt-0aH" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="Ai1-Cn-0b6"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Articles" id="Ni1-Lt-0aI"/>
+                    <navigationItem key="navigationItem" id="Ni1-Lt-0aI"/>
                     <connections>
                         <outlet property="activityIndicator" destination="Ai1-Lt-0aH" id="Ou1-Lt-0c1"/>
                         <outlet property="collectionView" destination="Cv1-Lt-0aF" id="Ou1-Lt-0c2"/>

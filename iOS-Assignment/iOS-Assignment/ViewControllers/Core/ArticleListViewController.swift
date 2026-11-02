@@ -46,15 +46,31 @@ final class ArticleListViewController: UIViewController {
 
     private func setupNavigationBar() {
         let appearance = UINavigationBarAppearance()
-        appearance.configureWithDefaultBackground()
-        appearance.largeTitleTextAttributes = [.font: AppFonts.screenTitle]
-
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .systemBackground
+        appearance.shadowColor = .clear
         navigationItem.standardAppearance = appearance
         navigationItem.scrollEdgeAppearance = appearance
-        navigationItem.largeTitleDisplayMode = .always
-        navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController?.navigationBar.directionalLayoutMargins.leading = 20
-        navigationController?.navigationBar.tintColor = .label
+
+        // Soft shadow under the header like in the design
+        let navigationBar = navigationController?.navigationBar
+        navigationBar?.tintColor = .label
+        navigationBar?.layer.shadowColor = UIColor.black.cgColor
+        navigationBar?.layer.shadowOpacity = 0.08
+        navigationBar?.layer.shadowOffset = CGSize(width: 0, height: 6)
+        navigationBar?.layer.shadowRadius = 8
+
+        // Title sits on the left, in the same row as the buttons
+        let titleLabel = UILabel()
+        titleLabel.text = "Articles"
+        titleLabel.font = AppFonts.screenTitle
+        titleLabel.adjustsFontForContentSizeCategory = true
+        let titleItem = UIBarButtonItem(customView: titleLabel)
+        if #available(iOS 26.0, *) {
+            titleItem.hidesSharedBackground = true
+        }
+        navigationItem.leftBarButtonItem = titleItem
+        navigationItem.backButtonDisplayMode = .minimal
 
         let searchButton = UIBarButtonItem(image: AppIcons.search, style: .plain,
                                            target: self, action: #selector(searchButtonTapped))

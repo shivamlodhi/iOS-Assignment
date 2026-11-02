@@ -8,9 +8,11 @@
 import UIKit
 
 enum AppIcons {
-    static let grid = UIImage(systemName: "square.grid.2x2.fill")
-    static let list = UIImage(systemName: "list.bullet")
-    static let search = UIImage(systemName: "magnifyingglass")
+    private static let navigationBarConfig = UIImage.SymbolConfiguration(pointSize: 22, weight: .bold)
+
+    static let grid = UIImage(systemName: "square.grid.2x2.fill", withConfiguration: navigationBarConfig)
+    static let list = UIImage(systemName: "list.bullet", withConfiguration: navigationBarConfig)
+    static let search = UIImage(systemName: "magnifyingglass", withConfiguration: navigationBarConfig)
     static let calendar = UIImage(systemName: "calendar")
     static let clock = UIImage(systemName: "clock")
     static let readMore = UIImage(systemName: "arrow.right.circle.fill")
