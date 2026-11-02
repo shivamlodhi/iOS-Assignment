@@ -14,9 +14,9 @@ final class ArticleCache {
     private let storage: Storage<String, [Article]>?
     private let key = "articles"
 
-    init() {
+    init(name: String = "ArticlesCache") {
         do {
-            storage = try Storage(diskConfig: DiskConfig(name: "ArticlesCache"),
+            storage = try Storage(diskConfig: DiskConfig(name: name),
                                   memoryConfig: MemoryConfig(),
                                   transformer: TransformerFactory.forCodable(ofType: [Article].self))
         } catch {

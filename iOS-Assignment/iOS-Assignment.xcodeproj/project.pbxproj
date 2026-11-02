@@ -8,11 +8,26 @@
 
 /* Begin PBXBuildFile section */
 		74C5691EB2819D9BEB1C1A11 /* Pods_iOS_Assignment.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 68288FF7B96994E9F5209713 /* Pods_iOS_Assignment.framework */; };
+		994BADCB60BD3509520C3B6C /* Pods_iOS_AssignmentTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CD8EAC2443F6CE18E9D17A1 /* Pods_iOS_AssignmentTests.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		0317FF413098FB0000299134 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0317FF143098FAA500299134 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0317FF1B3098FAA500299134;
+			remoteInfo = "iOS-Assignment";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		000B6FACA8EFBED25B2FC125 /* Pods-iOS-AssignmentTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOS-AssignmentTests.release.xcconfig"; path = "Target Support Files/Pods-iOS-AssignmentTests/Pods-iOS-AssignmentTests.release.xcconfig"; sourceTree = "<group>"; };
 		0317FF1C3098FAA500299134 /* iOS-Assignment.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iOS-Assignment.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0317FF423098FB0000299134 /* iOS-AssignmentTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "iOS-AssignmentTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		321C1C5D150BB129B002C4A5 /* Pods-iOS-Assignment.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOS-Assignment.debug.xcconfig"; path = "Target Support Files/Pods-iOS-Assignment/Pods-iOS-Assignment.debug.xcconfig"; sourceTree = "<group>"; };
+		33A7A07474DA33517819E69F /* Pods-iOS-AssignmentTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOS-AssignmentTests.debug.xcconfig"; path = "Target Support Files/Pods-iOS-AssignmentTests/Pods-iOS-AssignmentTests.debug.xcconfig"; sourceTree = "<group>"; };
+		4CD8EAC2443F6CE18E9D17A1 /* Pods_iOS_AssignmentTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iOS_AssignmentTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5ABF07C55C0B1F4708541EF4 /* Pods-iOS-Assignment.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iOS-Assignment.release.xcconfig"; path = "Target Support Files/Pods-iOS-Assignment/Pods-iOS-Assignment.release.xcconfig"; sourceTree = "<group>"; };
 		68288FF7B96994E9F5209713 /* Pods_iOS_Assignment.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iOS_Assignment.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +51,11 @@
 			path = "iOS-Assignment";
 			sourceTree = "<group>";
 		};
+		0317FF433098FB0000299134 /* iOS-AssignmentTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "iOS-AssignmentTests";
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +67,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0317FF443098FB0000299134 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				994BADCB60BD3509520C3B6C /* Pods_iOS_AssignmentTests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -54,6 +82,7 @@
 			isa = PBXGroup;
 			children = (
 				0317FF1E3098FAA500299134 /* iOS-Assignment */,
+				0317FF433098FB0000299134 /* iOS-AssignmentTests */,
 				0317FF1D3098FAA500299134 /* Products */,
 				8CC81511244400E0700A623C /* Pods */,
 				95475E1BB6ACE1B035061521 /* Frameworks */,
@@ -64,6 +93,7 @@
 			isa = PBXGroup;
 			children = (
 				0317FF1C3098FAA500299134 /* iOS-Assignment.app */,
+				0317FF423098FB0000299134 /* iOS-AssignmentTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -73,6 +103,8 @@
 			children = (
 				321C1C5D150BB129B002C4A5 /* Pods-iOS-Assignment.debug.xcconfig */,
 				5ABF07C55C0B1F4708541EF4 /* Pods-iOS-Assignment.release.xcconfig */,
+				33A7A07474DA33517819E69F /* Pods-iOS-AssignmentTests.debug.xcconfig */,
+				000B6FACA8EFBED25B2FC125 /* Pods-iOS-AssignmentTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -81,6 +113,7 @@
 			isa = PBXGroup;
 			children = (
 				68288FF7B96994E9F5209713 /* Pods_iOS_Assignment.framework */,
+				4CD8EAC2443F6CE18E9D17A1 /* Pods_iOS_AssignmentTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -110,6 +143,28 @@
 			productReference = 0317FF1C3098FAA500299134 /* iOS-Assignment.app */;
 			productType = "com.apple.product-type.application";
 		};
+		0317FF403098FB0000299134 /* iOS-AssignmentTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0317FF4A3098FB0000299134 /* Build configuration list for PBXNativeTarget "iOS-AssignmentTests" */;
+			buildPhases = (
+				FC9B6016006F7EBCE0401B0E /* [CP] Check Pods Manifest.lock */,
+				0317FF453098FB0000299134 /* Sources */,
+				0317FF443098FB0000299134 /* Frameworks */,
+				0317FF463098FB0000299134 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0317FF473098FB0000299134 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				0317FF433098FB0000299134 /* iOS-AssignmentTests */,
+			);
+			name = "iOS-AssignmentTests";
+			productName = "iOS-AssignmentTests";
+			productReference = 0317FF423098FB0000299134 /* iOS-AssignmentTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -122,6 +177,10 @@
 				TargetAttributes = {
 					0317FF1B3098FAA500299134 = {
 						CreatedOnToolsVersion = 26.2;
+					};
+					0317FF403098FB0000299134 = {
+						CreatedOnToolsVersion = 26.2;
+						TestTargetID = 0317FF1B3098FAA500299134;
 					};
 				};
 			};
@@ -140,12 +199,20 @@
 			projectRoot = "";
 			targets = (
 				0317FF1B3098FAA500299134 /* iOS-Assignment */,
+				0317FF403098FB0000299134 /* iOS-AssignmentTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		0317FF1A3098FAA500299134 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0317FF463098FB0000299134 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -198,6 +265,28 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-iOS-Assignment/Pods-iOS-Assignment-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		FC9B6016006F7EBCE0401B0E /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-iOS-AssignmentTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -208,7 +297,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		0317FF453098FB0000299134 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0317FF473098FB0000299134 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0317FF1B3098FAA500299134 /* iOS-Assignment */;
+			targetProxy = 0317FF413098FB0000299134 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		0317FF303098FAA700299134 /* Debug */ = {
@@ -398,6 +502,52 @@
 			};
 			name = Release;
 		};
+		0317FF483098FB0000299134 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 33A7A07474DA33517819E69F /* Pods-iOS-AssignmentTests.debug.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = AB6W4VLMXM;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.shivamapptest.iOS-AssignmentTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iOS-Assignment.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/iOS-Assignment";
+			};
+			name = Debug;
+		};
+		0317FF493098FB0000299134 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 000B6FACA8EFBED25B2FC125 /* Pods-iOS-AssignmentTests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = AB6W4VLMXM;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.shivamapptest.iOS-AssignmentTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iOS-Assignment.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/iOS-Assignment";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -415,6 +565,15 @@
 			buildConfigurations = (
 				0317FF303098FAA700299134 /* Debug */,
 				0317FF313098FAA700299134 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0317FF4A3098FB0000299134 /* Build configuration list for PBXNativeTarget "iOS-AssignmentTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0317FF483098FB0000299134 /* Debug */,
+				0317FF493098FB0000299134 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

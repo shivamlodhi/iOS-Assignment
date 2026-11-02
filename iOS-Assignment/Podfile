@@ -11,6 +11,10 @@ target 'iOS-Assignment' do
   pod 'Cache'
 
   pod 'Loaf'
+
+  target 'iOS-AssignmentTests' do
+    inherit! :search_paths
+  end
 end
 
 post_install do |installer|
