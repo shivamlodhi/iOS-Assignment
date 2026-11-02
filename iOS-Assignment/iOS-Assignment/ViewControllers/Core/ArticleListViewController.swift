@@ -267,9 +267,9 @@ extension ArticleListViewController: UICollectionViewDataSource {
 
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ArticleListCell.identifier, for: indexPath) as! ArticleListCell
         cell.configure(with: article)
-        cell.onReadMore = { [weak self] in
+        cell.onReadMore = { [weak self, weak cell] in
             guard let self else { return }
-            self.router.showDetail(for: article, from: self)
+            self.router.showDetail(for: article, from: self, sourceView: cell)
         }
         return cell
     }
@@ -280,7 +280,8 @@ extension ArticleListViewController: UICollectionViewDataSource {
 extension ArticleListViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        router.showDetail(for: visibleArticles[indexPath.item], from: self)
+        router.showDetail(for: visibleArticles[indexPath.item], from: self,
+                          sourceView: collectionView.cellForItem(at: indexPath))
     }
 }
 

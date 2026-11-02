@@ -18,12 +18,16 @@ final class AppRouter {
         self.resolver = resolver
     }
 
-    func showDetail(for article: Article, from viewController: UIViewController) {
+    func showDetail(for article: Article, from viewController: UIViewController, sourceView: UIView? = nil) {
         let detailViewController = storyboard.instantiateViewController(withIdentifier: "ArticleDetailViewController") as! ArticleDetailViewController
         detailViewController.article = article
         detailViewController.favoritesManager = resolver.resolve(FavoritesManager.self)
         // iPhone pushes on the list, iPad replaces the detail column
         if viewController.splitViewController?.isCollapsed ?? true {
+            // Detail zooms out of the tapped card
+            if let sourceView {
+                detailViewController.preferredTransition = .zoom { [weak sourceView] _ in sourceView }
+            }
             viewController.navigationController?.pushViewController(detailViewController, animated: true)
         } else {
             viewController.showDetailViewController(UINavigationController(rootViewController: detailViewController),
