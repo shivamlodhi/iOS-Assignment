@@ -1,0 +1,31 @@
+//
+//  ArticleGridCell.swift
+//  iOS-Assignment
+//
+//  Created by Shivam Lodhi on 02/11/26.
+//
+
+import UIKit
+
+final class ArticleGridCell: UICollectionViewCell {
+
+    static let identifier = "ArticleGridCell"
+
+    @IBOutlet private weak var articleImageView: ArticleImageView!
+    @IBOutlet private weak var titleLabel: UILabel!
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        contentView.backgroundColor = AppColors.cardBackground
+        contentView.layer.cornerRadius = 8
+
+        titleLabel.font = AppFonts.cardTitle
+        titleLabel.textColor = .white
+        titleLabel.adjustsFontForContentSizeCategory = true
+    }
+
+    func configure(with article: Article) {
+        titleLabel.text = article.title ?? article.description
+        articleImageView.setImage(with: article.imageURL)
+    }
+}
