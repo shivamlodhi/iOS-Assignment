@@ -11,7 +11,7 @@ An iPhone and iPad app that loads articles from the mock API, shows them in a li
 ## Setup and run
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/shivamlodhi/iOS-Assignment.git
 cd iOS-Assignment/iOS-Assignment
 pod install
 open iOS-Assignment.xcworkspace
