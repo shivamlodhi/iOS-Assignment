@@ -24,8 +24,7 @@ final class ArticleDetailViewController: UIViewController {
     var article: Article!
     var favoritesManager: FavoritesManager!
 
-    private lazy var favoriteButton = UIBarButtonItem(image: nil, style: .plain,
-                                                      target: self, action: #selector(favoriteTapped))
+    private let favoriteButton = UIButton(type: .system)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,8 +35,9 @@ final class ArticleDetailViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.navigationBar.tintColor = .white
-        navigationController?.navigationBar.layer.shadowOpacity = 0
+        // iPad shows the detail as the root of its column, so there is nothing to go back to
+        let canGoBack = navigationController?.viewControllers.first != self
+        navigationItem.leftBarButtonItem = canGoBack ? makeBackButton() : nil
     }
 
     override func viewSafeAreaInsetsDidChange() {
@@ -48,23 +48,50 @@ final class ArticleDetailViewController: UIViewController {
 
     private func setupNavigationBar() {
         title = "Article"
-
         let transparent = UINavigationBarAppearance()
         transparent.configureWithTransparentBackground()
         transparent.titleTextAttributes = [.foregroundColor: UIColor.white, .font: AppFonts.navigationTitle]
-        transparent.setBackIndicatorImage(AppIcons.back, transitionMaskImage: AppIcons.back)
 
         let scrolled = UINavigationBarAppearance()
         scrolled.configureWithOpaqueBackground()
         scrolled.backgroundColor = AppColors.cardBackground
         scrolled.shadowColor = .clear
         scrolled.titleTextAttributes = transparent.titleTextAttributes
-        scrolled.setBackIndicatorImage(AppIcons.back, transitionMaskImage: AppIcons.back)
 
         navigationItem.scrollEdgeAppearance = transparent
         navigationItem.standardAppearance = scrolled
-        navigationItem.rightBarButtonItem = favoriteButton
+        navigationItem.hidesBackButton = true
+        favoriteButton.tintColor = .white
+        favoriteButton.imageView?.contentMode = .scaleAspectFit
+        favoriteButton.contentHorizontalAlignment = .fill
+        favoriteButton.contentVerticalAlignment = .fill
+        favoriteButton.addTarget(self, action: #selector(favoriteTapped), for: .touchUpInside)
+        navigationItem.rightBarButtonItem = makeBarItem(with: favoriteButton, size: CGSize(width: 30, height: 25), inset: -8)
         updateFavoriteButton()
+    }
+
+    // Round back button from the design
+    private func makeBackButton() -> UIBarButtonItem {
+        let button = UIButton(type: .system)
+        button.setImage(AppIcons.back, for: .normal)
+        button.tintColor = .white
+        button.backgroundColor = UIColor.white.withAlphaComponent(0.2)
+        button.layer.cornerRadius = 22
+        button.addTarget(self, action: #selector(backTapped), for: .touchUpInside)
+        return makeBarItem(with: button, size: CGSize(width: 44, height: 44), inset: 8)
+    }
+
+    // Wraps the button so it sits 24pt from the screen edge like in the design
+    private func makeBarItem(with button: UIButton, size: CGSize, inset: CGFloat) -> UIBarButtonItem {
+        let container = UIView(frame: CGRect(x: 0, y: 0, width: size.width + abs(inset), height: 44))
+        button.frame = CGRect(x: max(inset, 0), y: (44 - size.height) / 2, width: size.width, height: size.height)
+        container.addSubview(button)
+
+        let item = UIBarButtonItem(customView: container)
+        if #available(iOS 26.0, *) {
+            item.hidesSharedBackground = true
+        }
+        return item
     }
 
     private func setupViews() {
@@ -126,10 +153,15 @@ final class ArticleDetailViewController: UIViewController {
     }
 
     private func updateFavoriteButton() {
-        favoriteButton.image = favoritesManager.isFavorite(article) ? AppIcons.favoriteFilled : AppIcons.favorite
+        let image = favoritesManager.isFavorite(article) ? AppIcons.favoriteSaved : AppIcons.favorite
+        favoriteButton.setImage(image, for: .normal)
     }
 
     // MARK: - Actions
+
+    @objc private func backTapped() {
+        navigationController?.popViewController(animated: true)
+    }
 
     @objc private func favoriteTapped() {
         favoritesManager.toggleFavorite(article)
