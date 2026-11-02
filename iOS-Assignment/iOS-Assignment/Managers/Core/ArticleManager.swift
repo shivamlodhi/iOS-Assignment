@@ -42,7 +42,7 @@ final class ArticleManager {
 
             switch result {
             case .success(let articles):
-                let validArticles = articles.filter { self.hasText($0.title) || self.hasText($0.description) }
+                let validArticles = articles.filter { !($0.title ?? "").isEmpty || !($0.description ?? "").isEmpty }
                 self.cache.save(validArticles)
                 completion(.fresh(validArticles))
             case .failure(let error):
@@ -54,10 +54,5 @@ final class ArticleManager {
     private func fallback(for error: APIError) -> ArticlesResult {
         let cachedArticles = cache.load()
         return cachedArticles.isEmpty ? .failure(error) : .cached(cachedArticles, error)
-    }
-
-    private func hasText(_ text: String?) -> Bool {
-        guard let text else { return false }
-        return !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 }
