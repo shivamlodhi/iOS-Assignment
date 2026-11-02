@@ -95,7 +95,7 @@ I didn't add the other optional pods. The system navigation bar and the zoom tra
 - Favourites are only kept on the device (UserDefaults). There is no favourites screen because the design doesn't have one
 - The design is light only, so the app uses fixed light colours
 - On iPad the design was adapted: the list sits in the left column and the detail fills the right one
-- The zoom transition is the system one (`preferredTransition = .zoom`). It looks a bit different on iOS 18 and iOS 26 because Apple changed it in iOS 26
+- The zoom transition is the system one (`preferredTransition = .zoom`). It looks a bit different on iOS 18 and iOS 26 because Apple changed it in iOS 26. I kept the system one on purpose instead of a custom animator; a custom transition can be added if needed
 - "Read Full Article" stays a solid blue button on iOS 26. With Liquid Glass the text was tinted and no longer matched the design
 
 ## Testing
@@ -115,6 +115,7 @@ To try offline mode in the simulator, turn off the Mac's Wi-Fi, then turn it bac
 - Put `ReachabilityService` behind a protocol so the offline path of `ArticleManager` can be unit tested too
 - UI tests for the main flows (list → detail → Safari, search, offline)
 - Snapshot tests for the screens at different text sizes
+- A custom card-to-detail transition (`UIViewControllerAnimatedTransitioning`) if the system zoom isn't enough
 - A favourites screen
 - Dark mode
 - Pagination if the API grows
