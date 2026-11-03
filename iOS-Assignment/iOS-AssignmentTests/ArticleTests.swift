@@ -10,9 +10,10 @@ import XCTest
 
 final class ArticleTests: XCTestCase {
 
-    private func makeArticle(title: String? = nil, description: String? = nil, url: String? = nil) -> Article {
+    private func makeArticle(title: String? = nil, description: String? = nil, url: String? = nil,
+                             content: String? = nil) -> Article {
         Article(source: nil, author: nil, title: title, description: description,
-                url: url, urlToImage: nil, publishedAt: nil, content: nil)
+                url: url, urlToImage: nil, publishedAt: nil, content: content)
     }
 
     func testSearchMatchesTitleAndDescription() {
@@ -28,6 +29,22 @@ final class ArticleTests: XCTestCase {
         XCTAssertEqual(makeArticle(title: "", description: "Description").displayTitle, "Description")
         XCTAssertEqual(makeArticle(title: nil, description: "Description").displayTitle, "Description")
         XCTAssertNil(makeArticle(title: nil, description: "").displayTitle)
+    }
+
+    func testBodyIsCleanedOfRawAPIText() {
+        let content = "Highlights\r\n<ul><li>Sales &amp; profit</li><li>Musk&#039;s plan</li></ul>… [+3029 More text"
+        let body = makeArticle(content: content).displayBody
+
+        XCTAssertEqual(body, "Highlights\n\n• Sales & profit\n• Musk's plan…\n\nMore text")
+    }
+
+    func testBodyFallsBackToDescription() {
+        XCTAssertEqual(makeArticle(description: "Short &quot;quote&quot;").displayBody, "Short \"quote\"")
+        XCTAssertNil(makeArticle().displayBody)
+    }
+
+    func testTitleFromDescriptionIsOneLine() {
+        XCTAssertEqual(makeArticle(description: "First line\r\nSecond line").displayTitle, "First line Second line")
     }
 
     func testOnlyWebLinksAreAllowed() {

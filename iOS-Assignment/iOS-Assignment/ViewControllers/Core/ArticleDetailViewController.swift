@@ -175,7 +175,7 @@ final class ArticleDetailViewController: UIViewController {
 
         articleImageView.setImage(with: article.imageURL)
 
-        let body = article.content ?? article.description ?? AppStrings.noDetails
+        let body = article.displayBody ?? AppStrings.noDetails
         bodyLabel.setText(body, lineSpacing: 10)
 
         // Some articles have a missing or broken link

@@ -19,9 +19,13 @@ struct Article: Codable, Hashable {
 
     // Same title on the list and the detail, the description is used when the title is missing
     var displayTitle: String? {
-        if let title, !title.isEmpty { return title }
-        if let description, !description.isEmpty { return description }
-        return nil
+        let text = [title, description].compactMap { $0 }.first { !$0.isEmpty }
+        return text?.cleanedArticleText.replacingOccurrences(of: "\n", with: " ")
+    }
+
+    // Body for the detail screen, the description is used when the content is missing
+    var displayBody: String? {
+        [content, description].compactMap { $0 }.first { !$0.isEmpty }?.cleanedArticleText
     }
 
     var imageURL: URL? {
