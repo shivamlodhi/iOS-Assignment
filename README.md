@@ -2,6 +2,19 @@
 
 An iPhone and iPad app that loads articles from the mock API, shows them in a list or grid, and opens a detail screen for each one. Built for the Magycal iOS challenge.
 
+## Summary
+
+All required parts of the challenge are done:
+- List and detail screens matching the Figma design.
+- Grid layout, search and pull to refresh.
+- Offline support with cached articles.
+- Liquid Glass on iOS 26 with a fallback for iOS 18–25.
+- Dynamic Type and an iPad split view.
+- A SwiftUI state view embedded in UIKit.
+- Handling of bad API data.
+
+Every required pod is used. Dependencies are wired with Swinject, and there are 18 unit tests.
+
 ## Requirements
 
 - Xcode 26 (built and tested with Xcode 26.2)
@@ -47,10 +60,10 @@ UIKit with Storyboards and XIBs, following MVC. The folders follow the structure
 | Folder | What is inside |
 | --- | --- |
 | `Models/Entities` | `Article`, `ArticleSource`, `ArticlesResponse` (Codable) |
-| `Models/ProviderProtocols` | `ArticleProviderProtocol` |
+| `Models/ProviderProtocols` | `ArticleProviderProtocol`, `ReachabilityProtocol` |
 | `Provider/Client` | `APIClient` (Alamofire), `APIError`, `APIEndpoint`, `ReachabilityService` |
 | `Provider/Core` | `ArticleProvider`, the API implementation of the protocol |
-| `Managers/Client` | `ArticleCache`, logger, colours, fonts, icons, date helper |
+| `Managers/Client` | `ArticleCache`, logger, date helper, constants (`AppColors`, `AppFonts`, `AppIcons`, `AppStrings`), small UIKit helpers |
 | `Managers/Core` | `ArticleManager` (network + cache), `FavoritesManager` |
 | `ViewControllers/Client` | `AppRouter` (navigation), `ToastHelper` |
 | `ViewControllers/Core` | `ArticleListViewController`, `ArticleDetailViewController` |
@@ -59,7 +72,7 @@ UIKit with Storyboards and XIBs, following MVC. The folders follow the structure
 | `Views/Storyboards` | `Main.storyboard` |
 | `Views/StateView.swift` | SwiftUI state view, embedded with `UIHostingController` |
 
-- View controllers only talk to managers. `ArticleManager` talks to the provider through `ArticleProviderProtocol`, so the provider can be replaced or mocked (the unit tests do this).
+- View controllers only talk to managers. `ArticleManager` talks to the provider through `ArticleProviderProtocol`, so the provider can be replaced or mocked. Reachability sits behind `ReachabilityProtocol` for the same reason, and the unit tests mock both.
 - All dependencies are registered in `AppDelegate` with Swinject and passed into the view controllers. View controllers don't create their own services.
 - `AppRouter` builds the detail screen and decides whether to push it (iPhone) or show it in the split view's detail column (iPad).
 
@@ -103,16 +116,26 @@ I didn't add the other optional pods. The system navigation bar and the zoom tra
 Unit tests (XCTest) are in `iOS-AssignmentTests`:
 
 - `ArticleDecodingTests` – valid JSON, broken articles, missing fields, invalid links
-- `DateHelperTests` – date formatting and "time ago"
-- `ArticleManagerTests` – fresh data, cache fallback and errors, using a mock provider
+- `ArticleManagerTests` – fresh data, cache fallback, offline, errors, and an empty response keeping the saved articles
+- `ArticleTests` – search matching and allowed links
+- `DateHelperTests` – date formatting, fractional seconds and "time ago"
+- `FavoritesManagerTests` – saving, removing, and articles without a link
 
-The manager tests skip themselves when the machine is offline, because the manager checks the real connection first.
+`MockArticleProvider` and `MockReachability` replace the network and the connection, so the tests are fast and also run offline.
 
 To try offline mode in the simulator, turn off the Mac's Wi-Fi, then turn it back on to see the list refresh by itself.
 
+## Known limitations
+
+- The list-to-detail transition is the system zoom, not a custom animator
+- There is no favourites screen, because the design doesn't have one
+- Light mode only, because the design is light only
+- User-facing text is in `AppStrings` but not localised yet
+- Keeping the open article when an iPad window becomes narrow (Split View or Slide Over) was not tested, because the simulator can't resize the window
+- The optional `Externals/` and `Assets/` folders are empty, so git doesn't include them
+
 ## What I would improve with more time
 
-- Put `ReachabilityService` behind a protocol so the offline path of `ArticleManager` can be unit tested too
 - UI tests for the main flows (list → detail → Safari, search, offline)
 - Snapshot tests for the screens at different text sizes
 - A custom card-to-detail transition (`UIViewControllerAnimatedTransitioning`) if the system zoom isn't enough
