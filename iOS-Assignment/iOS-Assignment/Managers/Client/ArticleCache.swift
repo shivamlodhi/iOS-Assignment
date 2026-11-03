@@ -9,7 +9,12 @@ import Foundation
 import Cache
 import XCGLogger
 
-final class ArticleCache {
+protocol ArticleCacheProtocol {
+    func save(_ articles: [Article])
+    func load() -> [Article]
+}
+
+final class ArticleCache: ArticleCacheProtocol {
 
     private let storage: Storage<String, [Article]>?
     private let key = "articles"

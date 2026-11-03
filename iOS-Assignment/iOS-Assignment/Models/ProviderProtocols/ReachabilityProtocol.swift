@@ -7,6 +7,8 @@
 
 import Foundation
 
-protocol ReachabilityProtocol {
+protocol ReachabilityProtocol: AnyObject {
     var isConnected: Bool { get }
+    // Called on the main thread when the connection goes up or down
+    var onChange: (() -> Void)? { get set }
 }

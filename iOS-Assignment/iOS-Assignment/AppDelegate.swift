@@ -20,15 +20,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     private func registerDependencies() {
-        container.register(APIClient.self) { _ in
+        container.register(APIClientProtocol.self) { _ in
             APIClient()
         }.inObjectScope(.container)
 
         container.register(ArticleProviderProtocol.self) { resolver in
-            ArticleProvider(apiClient: resolver.resolve(APIClient.self)!)
+            ArticleProvider(apiClient: resolver.resolve(APIClientProtocol.self)!)
         }
 
-        container.register(ArticleCache.self) { _ in
+        container.register(ArticleCacheProtocol.self) { _ in
             ArticleCache()
         }.inObjectScope(.container)
 
@@ -38,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         container.register(ArticleManager.self) { resolver in
             ArticleManager(provider: resolver.resolve(ArticleProviderProtocol.self)!,
-                           cache: resolver.resolve(ArticleCache.self)!,
+                           cache: resolver.resolve(ArticleCacheProtocol.self)!,
                            reachability: resolver.resolve(ReachabilityService.self)!)
         }.inObjectScope(.container)
 
@@ -47,7 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }.inObjectScope(.container)
 
         container.register(AppRouter.self) { resolver in
-            AppRouter(resolver: resolver)
+            AppRouter(favoritesManager: resolver.resolve(FavoritesManager.self)!)
         }.inObjectScope(.container)
     }
 

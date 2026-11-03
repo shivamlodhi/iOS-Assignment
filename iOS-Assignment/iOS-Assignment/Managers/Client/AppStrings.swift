@@ -43,4 +43,15 @@ enum AppStrings {
     static let noInternetMessage = "Please connect to the internet and try again."
     static let serverErrorMessage = "Server is not responding right now. Please try again later."
     static let invalidDataMessage = "We couldn't read the articles. Please try again later."
+
+    static func message(for error: APIError) -> String {
+        switch error {
+        case .noInternet:
+            return noInternetMessage
+        case .serverError:
+            return serverErrorMessage
+        case .invalidData:
+            return invalidDataMessage
+        }
+    }
 }

@@ -20,6 +20,7 @@ final class MockArticleProvider: ArticleProviderProtocol {
 // Lets the test pick online or offline
 final class MockReachability: ReachabilityProtocol {
     var isConnected = true
+    var onChange: (() -> Void)?
 }
 
 final class ArticleManagerTests: XCTestCase {
@@ -126,5 +127,19 @@ final class ArticleManagerTests: XCTestCase {
 
         wait(for: [expectation], timeout: 1)
         XCTAssertEqual(cache.load().count, 1)
+    }
+
+    func testOnlyRealConnectivityChangesAreReported() {
+        var reported: [Bool] = []
+        manager.onConnectivityChange = { reported.append($0) }
+
+        // Same state as before, like the first callback when reachability starts
+        reachability.onChange?()
+        reachability.isConnected = false
+        reachability.onChange?()
+        reachability.isConnected = true
+        reachability.onChange?()
+
+        XCTAssertEqual(reported, [false, true])
     }
 }

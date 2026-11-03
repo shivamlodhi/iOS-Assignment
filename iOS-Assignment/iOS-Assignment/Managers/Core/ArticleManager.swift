@@ -17,17 +17,21 @@ enum ArticlesResult {
 final class ArticleManager {
 
     private let provider: ArticleProviderProtocol
-    private let cache: ArticleCache
+    private let cache: ArticleCacheProtocol
     private let reachability: ReachabilityProtocol
+    private var wasConnected: Bool
 
-    init(provider: ArticleProviderProtocol, cache: ArticleCache, reachability: ReachabilityProtocol) {
+    // Called with the new state only when the connection really changes
+    var onConnectivityChange: ((Bool) -> Void)?
+
+    init(provider: ArticleProviderProtocol, cache: ArticleCacheProtocol, reachability: ReachabilityProtocol) {
         self.provider = provider
         self.cache = cache
         self.reachability = reachability
-    }
-
-    var isConnected: Bool {
-        reachability.isConnected
+        wasConnected = reachability.isConnected
+        reachability.onChange = { [weak self] in
+            self?.connectionChanged()
+        }
     }
 
     func fetchArticles(completion: @escaping (ArticlesResult) -> Void) {
@@ -52,6 +56,14 @@ final class ArticleManager {
                 completion(self.fallback(for: error))
             }
         }
+    }
+
+    // Reachability also reports when it starts, so only pass on a real change
+    private func connectionChanged() {
+        let isConnected = reachability.isConnected
+        guard isConnected != wasConnected else { return }
+        wasConnected = isConnected
+        onConnectivityChange?(isConnected)
     }
 
     private func fallback(for error: APIError) -> ArticlesResult {

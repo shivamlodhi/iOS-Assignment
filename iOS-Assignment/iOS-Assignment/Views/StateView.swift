@@ -66,7 +66,7 @@ extension StateView {
 
     static func error(_ error: APIError, onRetry: @escaping () -> Void) -> StateView {
         StateView(icon: AppIcons.errorSymbol, title: AppStrings.errorTitle,
-                  message: error.message, onRetry: onRetry)
+                  message: AppStrings.message(for: error), onRetry: onRetry)
     }
 
     static func empty(onRetry: @escaping () -> Void) -> StateView {

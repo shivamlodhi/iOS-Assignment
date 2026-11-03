@@ -9,7 +9,11 @@ import Foundation
 import Alamofire
 import XCGLogger
 
-final class APIClient {
+protocol APIClientProtocol {
+    func get<T: Decodable>(_ url: String, completion: @escaping (Result<T, APIError>) -> Void)
+}
+
+final class APIClient: APIClientProtocol {
 
     private let session: Session
 

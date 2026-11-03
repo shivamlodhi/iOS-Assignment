@@ -24,15 +24,4 @@ enum APIError: Error {
             self = .serverError
         }
     }
-
-    var message: String {
-        switch self {
-        case .noInternet:
-            return AppStrings.noInternetMessage
-        case .serverError:
-            return AppStrings.serverErrorMessage
-        case .invalidData:
-            return AppStrings.invalidDataMessage
-        }
-    }
 }

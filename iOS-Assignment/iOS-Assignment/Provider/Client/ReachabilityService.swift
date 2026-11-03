@@ -9,13 +9,11 @@ import Foundation
 import Reachability
 import XCGLogger
 
-extension Notification.Name {
-    static let connectivityChanged = Notification.Name("connectivityChanged")
-}
-
 final class ReachabilityService: ReachabilityProtocol {
 
     private let reachability = try? Reachability()
+
+    var onChange: (() -> Void)?
 
     var isConnected: Bool {
         guard let reachability else { return true }
@@ -25,11 +23,11 @@ final class ReachabilityService: ReachabilityProtocol {
     func start() {
         reachability?.whenReachable = { [weak self] reachability in
             log.info("Connection available via \(reachability.connection)")
-            self?.postChange()
+            self?.onChange?()
         }
         reachability?.whenUnreachable = { [weak self] _ in
             log.warning("Connection lost")
-            self?.postChange()
+            self?.onChange?()
         }
 
         do {
@@ -37,9 +35,5 @@ final class ReachabilityService: ReachabilityProtocol {
         } catch {
             log.error("Unable to start reachability notifier: \(error.localizedDescription)")
         }
-    }
-
-    private func postChange() {
-        NotificationCenter.default.post(name: .connectivityChanged, object: nil)
     }
 }

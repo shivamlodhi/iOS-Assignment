@@ -22,7 +22,6 @@ final class ArticleListViewController: UIViewController {
     private var visibleArticles: [Article] = []
     private var searchText = ""
     private var isGridMode = false
-    private var wasConnected = true
 
     private let refreshControl = UIRefreshControl()
     private var stateViewController: UIHostingController<StateView>?
@@ -36,9 +35,9 @@ final class ArticleListViewController: UIViewController {
         setupCollectionView()
         loadArticles()
 
-        wasConnected = articleManager.isConnected
-        NotificationCenter.default.addObserver(self, selector: #selector(connectivityChanged),
-                                               name: .connectivityChanged, object: nil)
+        articleManager.onConnectivityChange = { [weak self] isConnected in
+            self?.connectivityChanged(isConnected)
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -115,7 +114,7 @@ final class ArticleListViewController: UIViewController {
                                 forCellWithReuseIdentifier: ArticleListCell.identifier)
         collectionView.register(UINib(nibName: ArticleGridCell.identifier, bundle: nil),
                                 forCellWithReuseIdentifier: ArticleGridCell.identifier)
-        collectionView.collectionViewLayout = makeListLayout()
+        collectionView.collectionViewLayout = makeLayout()
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.keyboardDismissMode = .onDrag
@@ -126,38 +125,14 @@ final class ArticleListViewController: UIViewController {
         // Grid switches to one column for accessibility text sizes
         registerForTraitChanges([UITraitPreferredContentSizeCategory.self]) { (viewController: Self, _) in
             if viewController.isGridMode {
-                viewController.collectionView.setCollectionViewLayout(viewController.makeGridLayout(), animated: false)
+                viewController.collectionView.setCollectionViewLayout(viewController.makeLayout(), animated: false)
             }
         }
     }
 
-    // MARK: - Layouts
-
-    private func makeListLayout() -> UICollectionViewLayout {
-        let size = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(300))
-        let item = NSCollectionLayoutItem(layoutSize: size)
-        let group = NSCollectionLayoutGroup.vertical(layoutSize: size, subitems: [item])
-
-        let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = 16
-        section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 16, trailing: 8)
-        return UICollectionViewCompositionalLayout(section: section)
-    }
-
-    private func makeGridLayout() -> UICollectionViewLayout {
-        let columns = traitCollection.preferredContentSizeCategory.isAccessibilityCategory ? 1 : 2
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1 / CGFloat(columns)),
-                                              heightDimension: .estimated(160))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(160))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, repeatingSubitem: item, count: columns)
-        group.interItemSpacing = .fixed(10)
-
-        let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = 10
-        section.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 8, bottom: 16, trailing: 8)
-        return UICollectionViewCompositionalLayout(section: section)
+    private func makeLayout() -> UICollectionViewLayout {
+        guard isGridMode else { return ArticleLayouts.list() }
+        return ArticleLayouts.grid(isLargeText: traitCollection.preferredContentSizeCategory.isAccessibilityCategory)
     }
 
     // MARK: - Loading
@@ -177,13 +152,13 @@ final class ArticleListViewController: UIViewController {
                 self.articles = articles
                 self.reloadContent()
             case .cached(let articles, let error):
-                log.warning("Showing cached articles: \(error.message)")
+                log.warning("Showing cached articles: \(error)")
                 self.articles = articles
                 self.reloadContent()
                 let message = error == .noInternet ? AppStrings.offlineToast : AppStrings.refreshFailedToast
                 ToastHelper.showWarning(message, on: self)
             case .failure(let error):
-                log.error("No articles to show: \(error.message)")
+                log.error("No articles to show: \(error)")
                 self.articles = []
                 self.visibleArticles = []
                 self.collectionView.reloadData()
@@ -245,12 +220,7 @@ final class ArticleListViewController: UIViewController {
         loadArticles()
     }
 
-    @objc private func connectivityChanged() {
-        // Reachability also posts when it starts, only react to a real change
-        let isConnected = articleManager.isConnected
-        guard isConnected != wasConnected else { return }
-        wasConnected = isConnected
-
+    private func connectivityChanged(_ isConnected: Bool) {
         if isConnected {
             loadArticles()
         } else if !articles.isEmpty {
@@ -264,8 +234,7 @@ final class ArticleListViewController: UIViewController {
         layoutButton.setImage(isGridMode ? AppIcons.list : AppIcons.grid, for: .normal)
 
         UIView.transition(with: collectionView, duration: 0.25, options: .transitionCrossDissolve) {
-            self.collectionView.setCollectionViewLayout(self.isGridMode ? self.makeGridLayout() : self.makeListLayout(),
-                                                        animated: false)
+            self.collectionView.setCollectionViewLayout(self.makeLayout(), animated: false)
             self.collectionView.reloadData()
         }
     }
