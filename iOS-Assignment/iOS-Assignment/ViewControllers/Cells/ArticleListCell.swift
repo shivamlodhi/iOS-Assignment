@@ -51,6 +51,8 @@ final class ArticleListCell: UICollectionViewCell {
         footerStackView.axis = isLargeText ? .vertical : .horizontal
         footerStackView.alignment = isLargeText ? .leading : .center
         titleLabel.numberOfLines = isLargeText ? 0 : 2
+        // The button keeps its old size unless it rebuilds the title with the new font
+        readMoreButton.setNeedsUpdateConfiguration()
     }
 
     override func prepareForReuse() {

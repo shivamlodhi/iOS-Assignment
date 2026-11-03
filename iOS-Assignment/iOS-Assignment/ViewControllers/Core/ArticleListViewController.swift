@@ -68,6 +68,10 @@ final class ArticleListViewController: UIViewController {
         titleLabel.font = AppFonts.screenTitle
         titleLabel.textColor = .black
         titleLabel.adjustsFontForContentSizeCategory = true
+        // The bar has a fixed height, so the title stops growing at the largest normal size
+        titleLabel.maximumContentSizeCategory = .extraExtraExtraLarge
+        // With Auto Layout the bar follows the label size when the text size changes
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
         let titleItem = UIBarButtonItem(customView: titleLabel)
         if #available(iOS 26.0, *) {
             titleItem.hidesSharedBackground = true
