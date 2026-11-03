@@ -23,6 +23,13 @@ final class ArticleTests: XCTestCase {
         XCTAssertFalse(article.matches("bitcoin"))
     }
 
+    func testDisplayTitleFallsBackToDescription() {
+        XCTAssertEqual(makeArticle(title: "Title", description: "Description").displayTitle, "Title")
+        XCTAssertEqual(makeArticle(title: "", description: "Description").displayTitle, "Description")
+        XCTAssertEqual(makeArticle(title: nil, description: "Description").displayTitle, "Description")
+        XCTAssertNil(makeArticle(title: nil, description: "").displayTitle)
+    }
+
     func testOnlyWebLinksAreAllowed() {
         XCTAssertNotNil(makeArticle(url: "https://example.com").articleURL)
         XCTAssertNotNil(makeArticle(url: "http://example.com").articleURL)

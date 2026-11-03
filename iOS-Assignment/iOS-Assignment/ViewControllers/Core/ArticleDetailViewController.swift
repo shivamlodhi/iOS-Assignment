@@ -168,7 +168,7 @@ final class ArticleDetailViewController: UIViewController {
     }
 
     private func showArticle() {
-        titleLabel.setText(article.title ?? AppStrings.untitledArticle, lineSpacing: 6)
+        titleLabel.setText(article.displayTitle ?? AppStrings.untitledArticle, lineSpacing: 6)
 
         timeLabel.text = DateHelper.timeAgo(from: article.publishedAt)
         clockImageView.isHidden = timeLabel.text == nil

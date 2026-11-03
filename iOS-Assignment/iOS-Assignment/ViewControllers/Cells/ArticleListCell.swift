@@ -24,6 +24,8 @@ final class ArticleListCell: UICollectionViewCell {
         super.awakeFromNib()
         contentView.backgroundColor = AppColors.cardBackground
         contentView.layer.cornerRadius = AppMetrics.cornerRadius
+        // No blue focus ring on iPad, the design has none
+        focusEffect = nil
 
         titleLabel.font = AppFonts.cardTitle
         titleLabel.textColor = .white
@@ -57,7 +59,7 @@ final class ArticleListCell: UICollectionViewCell {
     }
 
     func configure(with article: Article) {
-        titleLabel.setText(article.title ?? article.description, lineSpacing: 6)
+        titleLabel.setText(article.displayTitle ?? AppStrings.untitledArticle, lineSpacing: 6)
         dateLabel.text = DateHelper.displayDate(from: article.publishedAt)
         calendarImageView.isHidden = dateLabel.text == nil
         articleImageView.setImage(with: article.imageURL)

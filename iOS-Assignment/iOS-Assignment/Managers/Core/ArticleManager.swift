@@ -46,7 +46,7 @@ final class ArticleManager {
 
             switch result {
             case .success(let articles):
-                let validArticles = articles.filter { !($0.title ?? "").isEmpty || !($0.description ?? "").isEmpty }
+                let validArticles = articles.filter { $0.displayTitle != nil }
                 // Keep the saved articles if the server sends an empty list
                 if !validArticles.isEmpty {
                     self.cache.save(validArticles)
