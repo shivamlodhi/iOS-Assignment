@@ -43,4 +43,12 @@ extension SceneDelegate: UISplitViewControllerDelegate {
         let detailNavigationController = svc.viewController(for: .secondary) as? UINavigationController
         return detailNavigationController?.topViewController is ArticleDetailViewController ? .secondary : .primary
     }
+
+    // An article open in a narrow window fades out the list's bar, give it back when the detail
+    // moves to its own column again
+    func splitViewControllerDidExpand(_ svc: UISplitViewController) {
+        let listNavigationBar = (svc.viewController(for: .primary) as? UINavigationController)?.navigationBar
+        listNavigationBar?.overrideUserInterfaceStyle = .light
+        listNavigationBar?.alpha = 1
+    }
 }
