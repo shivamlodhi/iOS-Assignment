@@ -26,12 +26,12 @@ final class ArticleImageView: UIView {
     }
 
     private func loadFromNib() {
-        Bundle.main.loadNibNamed("ArticleImageView", owner: self)
+        Bundle.main.loadNibNamed(String(describing: ArticleImageView.self), owner: self)
         contentView.frame = bounds
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         addSubview(contentView)
 
-        layer.cornerRadius = 8
+        layer.cornerRadius = AppMetrics.cornerRadius
         clipsToBounds = true
         contentView.backgroundColor = AppColors.placeholderBackground
         placeholderImageView.image = AppIcons.placeholder

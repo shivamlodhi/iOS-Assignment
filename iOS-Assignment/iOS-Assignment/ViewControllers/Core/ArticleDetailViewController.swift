@@ -10,6 +10,8 @@ import SafariServices
 
 final class ArticleDetailViewController: UIViewController {
 
+    static let identifier = "ArticleDetailViewController"
+
     @IBOutlet private weak var scrollView: UIScrollView!
     @IBOutlet private weak var headerView: UIView!
     @IBOutlet private weak var titleLabel: UILabel!
@@ -21,10 +23,20 @@ final class ArticleDetailViewController: UIViewController {
     @IBOutlet private weak var readFullArticleButton: UIButton!
     @IBOutlet private weak var titleTopConstraint: NSLayoutConstraint!
 
-    var article: Article!
-    var favoritesManager: FavoritesManager!
+    private let article: Article
+    private let favoritesManager: FavoritesManager
 
     private let favoriteButton = UIButton(type: .system)
+
+    init?(coder: NSCoder, article: Article, favoritesManager: FavoritesManager) {
+        self.article = article
+        self.favoritesManager = favoritesManager
+        super.init(coder: coder)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("Use init(coder:article:favoritesManager:)")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,7 +61,7 @@ final class ArticleDetailViewController: UIViewController {
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         // Header runs behind the navigation bar, so push the title below it
-        titleTopConstraint.constant = view.safeAreaInsets.top + 16
+        titleTopConstraint.constant = view.safeAreaInsets.top + AppMetrics.detailTitleTopSpacing
     }
 
     private func setupNavigationBar() {
@@ -74,7 +86,8 @@ final class ArticleDetailViewController: UIViewController {
         favoriteButton.addTarget(self, action: #selector(favoriteTapped), for: .touchUpInside)
         // Favourites are saved by link, so articles without one can't be saved
         if article.url != nil {
-            navigationItem.rightBarButtonItem = makeBarItem(with: favoriteButton, size: CGSize(width: 30, height: 25), inset: -8)
+            navigationItem.rightBarButtonItem = makeBarItem(with: favoriteButton, size: AppMetrics.favoriteIconSize,
+                                                            inset: AppMetrics.favoriteButtonInset)
             updateFavoriteButton()
         }
     }
@@ -90,14 +103,15 @@ final class ArticleDetailViewController: UIViewController {
         let button = UIButton(type: .system)
         button.setImage(AppIcons.back, for: .normal)
         button.tintColor = .white
-        button.layer.cornerRadius = 22
+        button.accessibilityLabel = AppStrings.back
+        button.layer.cornerRadius = AppMetrics.barButtonSize / 2
 
         // Liquid Glass on iOS 26, plain see-through circle on older versions
         if #available(iOS 26.0, *) {
             let glass = UIGlassEffect()
             glass.tintColor = AppColors.backButtonGlass
             let glassView = UIVisualEffectView(effect: glass)
-            glassView.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+            glassView.frame = CGRect(x: 0, y: 0, width: AppMetrics.barButtonSize, height: AppMetrics.barButtonSize)
             glassView.isUserInteractionEnabled = false
             glassView.cornerConfiguration = .capsule()
             button.insertSubview(glassView, at: 0)
@@ -105,13 +119,15 @@ final class ArticleDetailViewController: UIViewController {
             button.backgroundColor = AppColors.backButtonBackground
         }
         button.addTarget(self, action: #selector(backTapped), for: .touchUpInside)
-        return makeBarItem(with: button, size: CGSize(width: 44, height: 44), inset: 8)
+        let size = CGSize(width: AppMetrics.barButtonSize, height: AppMetrics.barButtonSize)
+        return makeBarItem(with: button, size: size, inset: AppMetrics.backButtonInset)
     }
 
     // Wraps the button so it sits 24pt from the screen edge like in the design
     private func makeBarItem(with button: UIButton, size: CGSize, inset: CGFloat) -> UIBarButtonItem {
-        let container = UIView(frame: CGRect(x: 0, y: 0, width: size.width + abs(inset), height: 44))
-        button.frame = CGRect(x: max(inset, 0), y: (44 - size.height) / 2, width: size.width, height: size.height)
+        let barHeight = AppMetrics.barButtonSize
+        let container = UIView(frame: CGRect(x: 0, y: 0, width: size.width + abs(inset), height: barHeight))
+        button.frame = CGRect(x: max(inset, 0), y: (barHeight - size.height) / 2, width: size.width, height: size.height)
         container.addSubview(button)
 
         let item = UIBarButtonItem(customView: container)
@@ -167,8 +183,9 @@ final class ArticleDetailViewController: UIViewController {
     }
 
     private func updateFavoriteButton() {
-        let image = favoritesManager.isFavorite(article) ? AppIcons.favoriteSaved : AppIcons.favorite
-        favoriteButton.setImage(image, for: .normal)
+        let isFavorite = favoritesManager.isFavorite(article)
+        favoriteButton.setImage(isFavorite ? AppIcons.favoriteSaved : AppIcons.favorite, for: .normal)
+        favoriteButton.accessibilityLabel = isFavorite ? AppStrings.removeFavorite : AppStrings.addFavorite
     }
 
     // MARK: - Actions

@@ -86,7 +86,7 @@ final class ArticleListViewController: UIViewController {
 
         // Both icons in one stack so the gap between them matches the design
         let buttonStack = UIStackView(arrangedSubviews: [layoutButton, searchButton])
-        buttonStack.spacing = 14
+        buttonStack.spacing = AppMetrics.navigationButtonSpacing
         let buttonsItem = UIBarButtonItem(customView: buttonStack)
         // Plain icons like the design, without the iOS 26 glass capsule behind them
         if #available(iOS 26.0, *) {
@@ -260,12 +260,18 @@ extension ArticleListViewController: UICollectionViewDataSource {
         let article = visibleArticles[indexPath.item]
 
         if isGridMode {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ArticleGridCell.identifier, for: indexPath) as! ArticleGridCell
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ArticleGridCell.identifier,
+                                                                for: indexPath) as? ArticleGridCell else {
+                return UICollectionViewCell()
+            }
             cell.configure(with: article)
             return cell
         }
 
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ArticleListCell.identifier, for: indexPath) as! ArticleListCell
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ArticleListCell.identifier,
+                                                            for: indexPath) as? ArticleListCell else {
+            return UICollectionViewCell()
+        }
         cell.configure(with: article)
         cell.onReadMore = { [weak self, weak cell] in
             guard let self else { return }

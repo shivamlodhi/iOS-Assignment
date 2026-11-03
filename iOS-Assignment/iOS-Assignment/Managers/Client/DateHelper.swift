@@ -20,6 +20,8 @@ enum DateHelper {
 
     private static let displayFormatter: DateFormatter = {
         let formatter = DateFormatter()
+        // Fixed English month names, the rest of the app text is English too
+        formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.dateFormat = "dd MMM,yyyy"
         return formatter
     }()
@@ -35,11 +37,11 @@ enum DateHelper {
         guard let date = date(from: string) else { return nil }
 
         let parts = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: date, to: Date())
-        if let years = parts.year, years > 0 { return "\(years)y ago" }
-        if let months = parts.month, months > 0 { return "\(months)mo ago" }
-        if let days = parts.day, days > 0 { return "\(days)d ago" }
-        if let hours = parts.hour, hours > 0 { return "\(hours)h ago" }
-        if let minutes = parts.minute, minutes > 0 { return "\(minutes)m ago" }
+        if let years = parts.year, years > 0 { return AppStrings.yearsAgo(years) }
+        if let months = parts.month, months > 0 { return AppStrings.monthsAgo(months) }
+        if let days = parts.day, days > 0 { return AppStrings.daysAgo(days) }
+        if let hours = parts.hour, hours > 0 { return AppStrings.hoursAgo(hours) }
+        if let minutes = parts.minute, minutes > 0 { return AppStrings.minutesAgo(minutes) }
         return AppStrings.justNow
     }
 

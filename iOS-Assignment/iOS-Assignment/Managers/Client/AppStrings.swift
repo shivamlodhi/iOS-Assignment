@@ -23,7 +23,17 @@ enum AppStrings {
     static let readFullArticle = "Read Full Article"
     static let untitledArticle = "Untitled article"
     static let noDetails = "No details available for this article."
+    static let back = "Back"
+    static let addFavorite = "Add to favorites"
+    static let removeFavorite = "Remove from favorites"
+
+    // Time since an article was published, like "10h ago"
     static let justNow = "Just now"
+    static func yearsAgo(_ years: Int) -> String { "\(years)y ago" }
+    static func monthsAgo(_ months: Int) -> String { "\(months)mo ago" }
+    static func daysAgo(_ days: Int) -> String { "\(days)d ago" }
+    static func hoursAgo(_ hours: Int) -> String { "\(hours)h ago" }
+    static func minutesAgo(_ minutes: Int) -> String { "\(minutes)m ago" }
 
     // States
     static let retry = "Retry"

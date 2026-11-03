@@ -10,17 +10,19 @@ import SwiftUI
 
 final class AppRouter {
 
+    private static let storyboardName = "Main"
+
     private let favoritesManager: FavoritesManager
-    private let storyboard = UIStoryboard(name: "Main", bundle: nil)
+    private let storyboard = UIStoryboard(name: storyboardName, bundle: nil)
 
     init(favoritesManager: FavoritesManager) {
         self.favoritesManager = favoritesManager
     }
 
     func showDetail(for article: Article, from viewController: UIViewController, sourceView: UIView? = nil) {
-        let detailViewController = storyboard.instantiateViewController(withIdentifier: "ArticleDetailViewController") as! ArticleDetailViewController
-        detailViewController.article = article
-        detailViewController.favoritesManager = favoritesManager
+        let detailViewController = storyboard.instantiateViewController(identifier: ArticleDetailViewController.identifier) { coder in
+            ArticleDetailViewController(coder: coder, article: article, favoritesManager: self.favoritesManager)
+        }
         // iPhone pushes on the list, iPad replaces the detail column
         if viewController.splitViewController?.isCollapsed ?? true {
             // Detail zooms out of the tapped card

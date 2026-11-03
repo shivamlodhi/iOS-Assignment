@@ -15,7 +15,7 @@ enum AppColors {
     static let placeholderBackground = UIColor(resource: .placeholderBackground)
     static let placeholderIcon = UIColor(resource: .placeholderIcon)
     static let detailBackground = UIColor(resource: .detailBackground)
-    static let detailMetaText = UIColor.white.withAlphaComponent(0.7)
-    static let backButtonGlass = UIColor(red: 0.26, green: 0.35, blue: 0.38, alpha: 0.8)
-    static let backButtonBackground = UIColor.white.withAlphaComponent(0.2)
+    static let detailMetaText = UIColor(resource: .detailMetaText)
+    static let backButtonGlass = UIColor(resource: .backButtonGlass)
+    static let backButtonBackground = UIColor(resource: .backButtonBackground)
 }

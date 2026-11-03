@@ -23,7 +23,7 @@ final class ArticleListCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         contentView.backgroundColor = AppColors.cardBackground
-        contentView.layer.cornerRadius = 8
+        contentView.layer.cornerRadius = AppMetrics.cornerRadius
 
         titleLabel.font = AppFonts.cardTitle
         titleLabel.textColor = .white
