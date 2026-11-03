@@ -42,8 +42,9 @@ final class ArticleListViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        // iOS 26 turns the bar dark when the dark cards scroll under it, keep it white like the design
-        navigationController?.navigationBar.overrideUserInterfaceStyle = .light
+        // iOS 26 turns the bar dark when the dark cards scroll under it, keep it white like the design.
+        // The detail fades the bar out for its own top bar, so bring it back here
+        setNavigationBarStyle(.light, alpha: 1)
     }
 
     private func setupNavigationBar() {

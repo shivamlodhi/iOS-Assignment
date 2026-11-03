@@ -14,6 +14,7 @@ final class AppRouter {
 
     private let favoritesManager: FavoritesManager
     private let storyboard = UIStoryboard(name: storyboardName, bundle: nil)
+    private let articleTransition = ArticleTransition()
 
     init(favoritesManager: FavoritesManager) {
         self.favoritesManager = favoritesManager
@@ -25,11 +26,17 @@ final class AppRouter {
         }
         // iPhone pushes on the list, iPad replaces the detail column
         if viewController.splitViewController?.isCollapsed ?? true {
+            guard let navigationController = viewController.navigationController else { return }
+            // On iOS 26 the system zoom snaps the bar between the two styles, so use our own card animation
+            if #available(iOS 26.0, *) {
+                articleTransition.push(detailViewController, on: navigationController, from: sourceView)
+                return
+            }
             // Detail zooms out of the tapped card
             if let sourceView {
                 detailViewController.preferredTransition = .zoom { [weak sourceView] _ in sourceView }
             }
-            viewController.navigationController?.pushViewController(detailViewController, animated: true)
+            navigationController.pushViewController(detailViewController, animated: true)
         } else {
             viewController.showDetailViewController(UINavigationController(rootViewController: detailViewController),
                                                     sender: viewController)

@@ -26,7 +26,14 @@ final class ArticleDetailViewController: UIViewController {
     private let article: Article
     private let favoritesManager: FavoritesManager
 
+    // Own top bar instead of the navigation bar, so it moves with the screen during the card animation
+    private let topBarView = UIView()
+    private let topBarTitleLabel = UILabel()
+    private let backButton = UIButton(type: .system)
+    private var backButtonGlassView: UIVisualEffectView?
     private let favoriteButton = UIButton(type: .system)
+    private var topBarHeightConstraint: NSLayoutConstraint!
+    private var topBarCenterConstraint: NSLayoutConstraint!
 
     init?(coder: NSCoder, article: Article, favoritesManager: FavoritesManager) {
         self.article = article
@@ -40,101 +47,126 @@ final class ArticleDetailViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupNavigationBar()
+        setupTopBar()
         setupViews()
         showArticle()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        // Dark header, so the status bar and bar content stay light
-        navigationController?.navigationBar.overrideUserInterfaceStyle = .dark
+        hideNavigationBar()
         updateBackButton()
     }
 
     // Also called when the iPad window shrinks and the detail moves onto the list's stack
     override func didMove(toParent parent: UIViewController?) {
         super.didMove(toParent: parent)
+        if navigationController?.topViewController == self {
+            hideNavigationBar()
+        }
         updateBackButton()
     }
 
-    override func viewSafeAreaInsetsDidChange() {
-        super.viewSafeAreaInsetsDidChange()
-        // Header runs behind the navigation bar, so push the title below it
-        titleTopConstraint.constant = view.safeAreaInsets.top + AppMetrics.detailTitleTopSpacing
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        // The top bar covers the same area as the hidden navigation bar. The safe area can't be used
+        // for this, it stops counting the navigation bar once it is faded out
+        let barFrame = navigationController?.navigationBar.frame ?? .zero
+        topBarHeightConstraint.constant = barFrame.maxY
+        // Bar buttons sit in the top 44pt of the bar, like the system puts them
+        topBarCenterConstraint.constant = barFrame.minY + AppMetrics.barButtonSize / 2
+        // Header runs behind the top bar, so push the title below it
+        titleTopConstraint.constant = barFrame.maxY + AppMetrics.detailTitleTopSpacing
     }
 
-    private func setupNavigationBar() {
-        title = AppStrings.articleTitle
-        let transparent = UINavigationBarAppearance()
-        transparent.configureWithTransparentBackground()
-        transparent.titleTextAttributes = [.foregroundColor: UIColor.white, .font: AppFonts.navigationTitle]
+    // The navigation bar stays in place for the layout and status bar, it is only faded out
+    private func hideNavigationBar() {
+        setNavigationBarStyle(.dark, alpha: 0)
+    }
 
-        let scrolled = UINavigationBarAppearance()
-        scrolled.configureWithOpaqueBackground()
-        scrolled.backgroundColor = AppColors.cardBackground
-        scrolled.shadowColor = .clear
-        scrolled.titleTextAttributes = transparent.titleTextAttributes
-
-        navigationItem.scrollEdgeAppearance = transparent
-        navigationItem.standardAppearance = scrolled
+    private func setupTopBar() {
         navigationItem.hidesBackButton = true
+        topBarView.backgroundColor = AppColors.cardBackground
+        topBarView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(topBarView)
+
+        topBarTitleLabel.text = AppStrings.articleTitle
+        topBarTitleLabel.font = AppFonts.navigationTitle
+        topBarTitleLabel.textColor = .white
+        topBarTitleLabel.accessibilityTraits = .header
+
         favoriteButton.tintColor = .white
         favoriteButton.imageView?.contentMode = .scaleAspectFit
         favoriteButton.contentHorizontalAlignment = .fill
         favoriteButton.contentVerticalAlignment = .fill
         favoriteButton.addTarget(self, action: #selector(favoriteTapped), for: .touchUpInside)
         // Favourites are saved by link, so articles without one can't be saved
-        if article.url != nil {
-            navigationItem.rightBarButtonItem = makeBarItem(with: favoriteButton, size: AppMetrics.favoriteIconSize,
-                                                            inset: AppMetrics.favoriteButtonInset)
-            updateFavoriteButton()
+        favoriteButton.isHidden = article.url == nil
+        updateFavoriteButton()
+
+        for subview in [topBarTitleLabel, backButton, favoriteButton] {
+            subview.translatesAutoresizingMaskIntoConstraints = false
+            topBarView.addSubview(subview)
         }
+        topBarHeightConstraint = topBarView.heightAnchor.constraint(equalToConstant: 0)
+        topBarCenterConstraint = topBarTitleLabel.centerYAnchor.constraint(equalTo: view.topAnchor)
+        let side = AppMetrics.detailBarSideInset
+        NSLayoutConstraint.activate([
+            topBarView.topAnchor.constraint(equalTo: view.topAnchor),
+            topBarView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            topBarView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            topBarHeightConstraint,
+
+            topBarCenterConstraint,
+            topBarTitleLabel.centerXAnchor.constraint(equalTo: topBarView.centerXAnchor),
+
+            backButton.leadingAnchor.constraint(equalTo: topBarView.leadingAnchor, constant: side),
+            backButton.centerYAnchor.constraint(equalTo: topBarTitleLabel.centerYAnchor),
+            backButton.widthAnchor.constraint(equalToConstant: AppMetrics.barButtonSize),
+            backButton.heightAnchor.constraint(equalToConstant: AppMetrics.barButtonSize),
+
+            favoriteButton.trailingAnchor.constraint(equalTo: topBarView.trailingAnchor, constant: -side),
+            favoriteButton.centerYAnchor.constraint(equalTo: topBarTitleLabel.centerYAnchor),
+            favoriteButton.widthAnchor.constraint(equalToConstant: AppMetrics.favoriteIconSize.width),
+            favoriteButton.heightAnchor.constraint(equalToConstant: AppMetrics.favoriteIconSize.height)
+        ])
+        setupBackButton()
     }
 
     // iPad shows the detail as the root of its column, so there is nothing to go back to
     private func updateBackButton() {
-        let canGoBack = navigationController?.viewControllers.first != self
-        navigationItem.leftBarButtonItem = canGoBack ? makeBackButton() : nil
+        backButton.isHidden = navigationController?.viewControllers.first == self
+        backButtonGlassView?.isHidden = backButton.isHidden
     }
 
     // Round back button from the design
-    private func makeBackButton() -> UIBarButtonItem {
-        let button = UIButton(type: .system)
-        button.setImage(AppIcons.back, for: .normal)
-        button.tintColor = .white
-        button.accessibilityLabel = AppStrings.back
-        button.layer.cornerRadius = AppMetrics.barButtonSize / 2
+    private func setupBackButton() {
+        backButton.setImage(AppIcons.back, for: .normal)
+        backButton.tintColor = .white
+        backButton.accessibilityLabel = AppStrings.back
+        backButton.layer.cornerRadius = AppMetrics.barButtonSize / 2
 
-        // Liquid Glass on iOS 26, plain see-through circle on older versions
+        // Liquid Glass on iOS 26, plain see-through circle on older versions. The glass sits behind
+        // the button, inside it the glass would cover the arrow
         if #available(iOS 26.0, *) {
             let glass = UIGlassEffect()
             glass.tintColor = AppColors.backButtonGlass
             let glassView = UIVisualEffectView(effect: glass)
-            glassView.frame = CGRect(x: 0, y: 0, width: AppMetrics.barButtonSize, height: AppMetrics.barButtonSize)
             glassView.isUserInteractionEnabled = false
             glassView.cornerConfiguration = .capsule()
-            button.insertSubview(glassView, at: 0)
+            glassView.translatesAutoresizingMaskIntoConstraints = false
+            topBarView.insertSubview(glassView, belowSubview: backButton)
+            NSLayoutConstraint.activate([
+                glassView.leadingAnchor.constraint(equalTo: backButton.leadingAnchor),
+                glassView.trailingAnchor.constraint(equalTo: backButton.trailingAnchor),
+                glassView.topAnchor.constraint(equalTo: backButton.topAnchor),
+                glassView.bottomAnchor.constraint(equalTo: backButton.bottomAnchor)
+            ])
+            backButtonGlassView = glassView
         } else {
-            button.backgroundColor = AppColors.backButtonBackground
+            backButton.backgroundColor = AppColors.backButtonBackground
         }
-        button.addTarget(self, action: #selector(backTapped), for: .touchUpInside)
-        let size = CGSize(width: AppMetrics.barButtonSize, height: AppMetrics.barButtonSize)
-        return makeBarItem(with: button, size: size, inset: AppMetrics.backButtonInset)
-    }
-
-    // Wraps the button so it sits 24pt from the screen edge like in the design
-    private func makeBarItem(with button: UIButton, size: CGSize, inset: CGFloat) -> UIBarButtonItem {
-        let barHeight = AppMetrics.barButtonSize
-        let container = UIView(frame: CGRect(x: 0, y: 0, width: size.width + abs(inset), height: barHeight))
-        button.frame = CGRect(x: max(inset, 0), y: (barHeight - size.height) / 2, width: size.width, height: size.height)
-        container.addSubview(button)
-
-        let item = UIBarButtonItem(customView: container)
-        if #available(iOS 26.0, *) {
-            item.hidesSharedBackground = true
-        }
-        return item
+        backButton.addTarget(self, action: #selector(backTapped), for: .touchUpInside)
     }
 
     private func setupViews() {
