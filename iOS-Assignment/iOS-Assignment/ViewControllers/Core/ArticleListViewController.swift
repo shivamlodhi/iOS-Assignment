@@ -162,7 +162,8 @@ final class ArticleListViewController: UIViewController {
                 self.articles = []
                 self.visibleArticles = []
                 self.collectionView.reloadData()
-                self.showState(error == .noInternet ? .offline(onRetry: self.retry) : .error(error, onRetry: self.retry))
+                let onRetry = self.weakRetry()
+                self.showState(error == .noInternet ? .offline(onRetry: onRetry) : .error(error, onRetry: onRetry))
             }
         }
     }
@@ -172,7 +173,7 @@ final class ArticleListViewController: UIViewController {
         collectionView.reloadData()
 
         if articles.isEmpty {
-            showState(.empty(onRetry: retry))
+            showState(.empty(onRetry: weakRetry()))
         } else if visibleArticles.isEmpty {
             showState(.noResults(for: searchText))
         } else {
@@ -212,6 +213,11 @@ final class ArticleListViewController: UIViewController {
     private func retry() {
         hideState()
         loadArticles()
+    }
+
+    // The state view is owned by this screen, so it must not hold the screen strongly
+    private func weakRetry() -> () -> Void {
+        { [weak self] in self?.retry() }
     }
 
     // MARK: - Actions
