@@ -51,7 +51,7 @@ xcodebuild test -workspace iOS-Assignment.xcworkspace -scheme iOS-Assignment -de
 - Loading, empty, error, offline and "no results" states
 - Dynamic Type on all screens. At accessibility sizes the grid switches to one column and the list card stacks the date and button
 - Liquid Glass on iOS 26 for the detail back button and the Retry button, with a plain fallback on iOS 18–25
-- Zoom transition from the tapped card to the detail screen on iPhone
+- Custom card-to-detail transition on iPhone with iOS 26: the detail grows out of the tapped card and shrinks back into it. iOS 18–25 keep the system zoom transition
 
 ## Architecture
 
@@ -65,7 +65,7 @@ UIKit with Storyboards and XIBs, following MVC. The folders follow the structure
 | `Provider/Core` | `ArticleProvider`, the API implementation of the protocol |
 | `Managers/Client` | `ArticleCache`, logger, date helper, constants (`AppColors`, `AppFonts`, `AppIcons`, `AppStrings`), small UIKit helpers |
 | `Managers/Core` | `ArticleManager` (network + cache), `FavoritesManager` |
-| `ViewControllers/Client` | `AppRouter` (navigation), `ToastHelper` |
+| `ViewControllers/Client` | `AppRouter` (navigation), `ArticleTransition` (card animation), `ToastHelper` |
 | `ViewControllers/Core` | `ArticleListViewController`, `ArticleDetailViewController` |
 | `ViewControllers/Cells` | List and grid cells |
 | `Views/XIBs` | Cell XIBs and the reusable `ArticleImageView` |
@@ -91,7 +91,7 @@ Optional pods:
 
 - **Loaf** – small toast messages, used for "You’re offline. Showing saved articles." It is light and doesn't block the screen like an alert would.
 
-I didn't add the other optional pods. The system navigation bar and the zoom transition were enough, and the pull to refresh control and loading indicator already show when something is loading.
+I didn't add the other optional pods. The system navigation bar and a small custom transition were enough, and the pull to refresh control and loading indicator already show when something is loading.
 
 ## Handling bad data
 
@@ -108,7 +108,7 @@ I didn't add the other optional pods. The system navigation bar and the zoom tra
 - Favourites are only kept on the device (UserDefaults). There is no favourites screen because the design doesn't have one
 - The design is light only, so the app uses fixed light colours
 - On iPad the design was adapted: the list sits in the left column and the detail fills the right one
-- The zoom transition is the system one (`preferredTransition = .zoom`). It looks a bit different on iOS 18 and iOS 26 because Apple changed it in iOS 26. I kept the system one on purpose instead of a custom animator; a custom transition can be added if needed
+- On iOS 26 the list-to-detail transition is a custom animator (`ArticleTransition`). The system zoom switched the navigation bar between the white list style and the dark detail style in one frame, and left the glass back button on screen when going back. Now the detail draws its own top bar, which moves with the card animation, and the navigation bar only fades out and back in. iOS 18–25 still use the system zoom, which doesn't have this problem
 - "Read Full Article" stays a solid blue button on iOS 26. With Liquid Glass the text was tinted and no longer matched the design
 
 ## Testing
@@ -127,7 +127,7 @@ To try offline mode in the simulator, turn off the Mac's Wi-Fi, then turn it bac
 
 ## Known limitations
 
-- The list-to-detail transition is the system zoom, not a custom animator
+- On iOS 26, swiping back plays the closing animation once the swipe ends instead of following the finger. Driving it with the finger crashed inside the iOS 26 navigation bar
 - There is no favourites screen, because the design doesn't have one
 - Light mode only, because the design is light only
 - User-facing text is in `AppStrings` but not localised yet
@@ -138,7 +138,7 @@ To try offline mode in the simulator, turn off the Mac's Wi-Fi, then turn it bac
 
 - UI tests for the main flows (list → detail → Safari, search, offline)
 - Snapshot tests for the screens at different text sizes
-- A custom card-to-detail transition (`UIViewControllerAnimatedTransitioning`) if the system zoom isn't enough
+- A swipe back that follows the finger on iOS 26, once the navigation bar crash is worked around
 - A favourites screen
 - Dark mode
 - Pagination if the API grows
